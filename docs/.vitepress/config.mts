@@ -7,7 +7,7 @@ export default defineConfig({
   title: "Artboard",
   description: "Artboard Documentation",
   base: '/docs',
-  outDir: './../website/.output/public/docs',
+  outDir: './../website/dist/docs',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
