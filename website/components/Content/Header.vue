@@ -20,7 +20,8 @@
       </h1>
       <div class="h-64 flex items-center w-[700px]">
         <p class="text-3xl font-serif text-stone-700">
-          Drag, zoom, scroll any DOM element or canvas.
+          Mouse and touch friendly artboard library to pan and zoom any element
+          or canvas.
         </p>
       </div>
 

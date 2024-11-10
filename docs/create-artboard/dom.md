@@ -1,16 +1,12 @@
 # DOM
 
-This mode uses two DOM elements to render the artboard:
-
-- The artboard istself
-- The direct parent of the artboard element
+Use the [dom](/plugins/dom) plugin to use a DOM element as the artboard.
 
 ## Requirements
 
 - The root element should be `position: relative` (or anything that creates a
   new stacking context such as `absolute` or `fixed`)
 - The artboard element must be `position: absolute` and anchored to the top left
-  using (`top: 0` and `left: 0`)
 
 ## Minimal Example
 

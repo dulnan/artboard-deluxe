@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'nuxt-svg-icon-sprite'],
+  ssr: true,
 
   runtimeConfig: {
     public: {
@@ -62,7 +63,7 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
   nitro: {
     prerender: {
       crawlLinks: false,
-      routes: ['/', '/404.html', '/image', '/webgl', '/2d-canvas'],
+      routes: ['/', '/404.html', '/playground', '/2d-canvas'],
     },
   },
 })

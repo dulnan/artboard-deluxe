@@ -1,3 +1,5 @@
 {
-  "basePath": "/docs"
+  "basePath": "/reference",
+  "hostedBaseUrl": "https://artboard-deluxe.dulnan.net/reference",
+  "useHostedBaseUrlForAbsoluteLinks": true
 }

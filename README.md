@@ -1,9 +1,9 @@
-# Artboard Deluxe - Mouse and touch friendly artboard JavaScript library
+# Artboard Deluxe - Mouse and touch friendly artboard library
 
 - Use mouse or touch gestures to pan, drag or zoom
 - Only requires two DOM elements
 - Smooth/momentum scrolling, animations, scroll velocity
-- Also works with HTML canvas (2D, WebGL)
+- Works with HTML canvas (2D, WebGL)
 - Plugins for rendering scrollbars, overview or keyboard shortcuts
 
 **[Demo](https://artboard-deluxe.dulnan.net)** -

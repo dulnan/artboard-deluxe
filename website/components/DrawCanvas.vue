@@ -199,7 +199,7 @@ function erase() {
   forEachContext((ctx) =>
     ctx.clearRect(0, 0, interfaceWidth.value, interfaceHeight.value),
   )
-  pixels.fill(0)
+  pixels.fill('')
 }
 
 function getRootElement(): HTMLElement | null {
@@ -227,19 +227,19 @@ function drawInterface() {
   ctx.strokeRect(x * 32 + 1.5, y * 32 + 1.5, 29, 29)
 }
 
-const pixels: number[] = Array.from({
+const pixels: string[] = Array.from({
   length: width.value * height.value,
-}).map(() => 0)
+}).map(() => '')
 
 function setPixel(x: number, y: number) {
   const index = x + y * width.value
   const pixel = pixels[index]
 
-  if (pixel !== 0) {
+  if (pixel === colorHex.value) {
     return
   }
 
-  pixels[index] = 1
+  pixels[index] = colorHex.value
 
   forEachContext((ctx) => {
     ctx.fillStyle = colorHex.value

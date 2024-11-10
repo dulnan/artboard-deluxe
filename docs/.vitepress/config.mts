@@ -6,11 +6,13 @@ import { renderSandbox } from 'vitepress-plugin-sandpack';
 export default defineConfig({
   title: "Artboard",
   description: "Artboard Documentation",
+  base: '/docs',
+  outDir: './../website/.output/public/docs',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Home', link: 'https://artboard-deluxe.dulnan.net' },
+      { text: 'Reference', link: 'https://artboard-deluxe.dulnan.net/reference' }
     ],
 
     sidebar: [
@@ -29,15 +31,16 @@ export default defineConfig({
       {
         text: 'Plugins',
         items: [
-          { text: 'scrollbar', link: '/plugins/scrollbar' },
-          { text: 'overview', link: '/plugins/overview' },
-          { text: 'keyboard', link: '/plugins/keyboard' },
           { text: 'clickZoom', link: '/plugins/click-zoom' },
+          { text: 'dom', link: '/plugins/dom' },
           { text: 'doubleTapZoom', link: '/plugins/double-tap-zoom' },
+          { text: 'keyboard', link: '/plugins/keyboard' },
           { text: 'mouse', link: '/plugins/mouse' },
+          { text: 'overview', link: '/plugins/overview' },
+          { text: 'raf', link: '/plugins/raf' },
+          { text: 'scrollbar', link: '/plugins/scrollbar' },
           { text: 'touch', link: '/plugins/touch' },
           { text: 'wheel', link: '/plugins/wheel' },
-          { text: 'raf', link: '/plugins/raf' },
         ]
       },
       {

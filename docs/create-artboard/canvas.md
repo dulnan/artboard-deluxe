@@ -1,8 +1,10 @@
 # Canvas
 
-Allows rendering of the artboard as a canvas. Note the class does not actually
-render anything on the canvas, it only manages the interactions and calculates
-the offset and scale.
+You can render your artboard using a canvas. For this you can pass in the
+`<canvas>` element as the root element when creating an artboard instance.
+
+Note that the library does not actually render anything on the canvas, it only
+manages the interactions and calculates the offset and scale.
 
 ## Requirements
 
