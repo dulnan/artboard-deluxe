@@ -28,5 +28,6 @@ logs
 !.env.example
 website/public/docs
 scripts/licensed-assets/source/
-website/assets/fonts/licensed-fonts/
+website/assets/fonts/licensed-fonts/*
 docs/.vitepress/cache
+!.gitkeep
