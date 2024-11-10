@@ -1,0 +1,232 @@
+@import './partials/fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    counter-reset: heading;
+    text-rendering: optimizeSpeed;
+    image-rendering: pixelated;
+    touch-action: none;
+  }
+
+  :root {
+    --color-primary: 197 54 9;
+    --color-secondary: 5 53 115;
+    --ruler-size: 16;
+    --ruler-size-px: calc(var(--ruler-size) * 1px);
+    --scrollbar-size: 28;
+    --scrollbar-size-px: calc(var(--scrollbar-size) * 1px);
+    --artboard-size: 1408;
+    --artboard-size-px: calc(var(--artboard-size) * 1px);
+    --toolbar-size: 70;
+    --toolbar-size-px: calc(var(--toolbar-size) * 1px);
+    --window-padding: 4px;
+    --window-border-size: 1px;
+
+    @screen lg {
+      --ruler-size: 24;
+      --window-padding: 10px;
+      --window-border-size: 1.5px;
+      --toolbar-size: 0;
+    }
+  }
+}
+
+@layer utilities {
+  .border-image-draw {
+    border: 16px solid white;
+    border-image-source: url('~/assets/border-draw-export.png');
+    border-image-slice: 64 64;
+    border-image-repeat: repeat;
+  }
+
+  .image-pixelated {
+    image-rendering: pixelated;
+  }
+}
+
+@layer components {
+  .section {
+    @apply p-96 pb-[96px] font-sans;
+
+    > h2 {
+      @apply font-serif font-bold relative uppercase;
+      font-size: 50px;
+      line-height: 49px;
+      letter-spacing: 10px;
+      height: 44px;
+      margin-bottom: 82.5px;
+      @apply text-primary;
+
+      &:before {
+        content: '';
+        @apply block bg-primary h-[32px] w-[100px];
+        @apply absolute top-[6px] left-[-116px];
+      }
+    }
+  }
+
+  .code {
+    @apply block font-mono;
+    @apply bg-stone-100;
+  }
+
+  .link {
+    @apply text-secondary underline decoration-[2px] underline-offset-4 font-bold hover:text-primary;
+  }
+
+  .content-docs {
+    @apply text-xl;
+
+    code {
+      @apply font-sans;
+    }
+
+    h2 {
+      @apply font-serif text-3xl;
+
+      &:not(:first-child) {
+        @apply mt-64;
+      }
+    }
+
+    h3 {
+      @apply font-serif text-xl mt-64;
+    }
+
+    h4 {
+      @apply font-sans text-xl font-bold mt-32;
+    }
+
+    h5 {
+      @apply font-sans text-xl font-bold uppercase tracking-widest mt-32;
+    }
+  }
+
+  .window {
+    @apply p-window;
+    background: #cccccc;
+    border: var(--window-border-size) solid #454545;
+    @apply flex flex-col;
+
+    box-shadow:
+      inset calc(var(--window-border-size) * -1)
+        calc(var(--window-border-size) * -1) 0px 0px rgb(62 62 62 / 31%),
+      inset var(--window-border-size) var(--window-border-size) 0px 0px white;
+  }
+
+  .window-header {
+    @apply flex mb-window;
+    gap: calc(var(--window-padding) / 2);
+
+    hr {
+      @apply h-2 bg-white;
+      box-shadow: 2px 2px 0 0 rgb(62 62 62 / 31%);
+    }
+
+    > div {
+      @apply mt-[1px] pr-[4px];
+      @apply flex-1 grid;
+      grid-template-rows: auto auto auto;
+    }
+
+    button {
+      border: var(--window-border-size) solid #454545;
+      @apply size-20;
+      box-shadow:
+        calc(var(--window-border-size) * -1) 0 0px 0px #acacac,
+        calc(var(--window-border-size) * -1)
+          calc(var(--window-border-size) * -1) 0px 0px #acacac,
+        0 calc(var(--window-border-size) * -1) 0px 0px #acacac,
+        0 var(--window-border-size) 0px 0px white,
+        var(--window-border-size) 0 0px 0px white,
+        var(--window-border-size) var(--window-border-size) 0px 0px white,
+        inset 0 var(--window-border-size) 0 0 rgba(255, 255, 255, 0.5),
+        inset var(--window-border-size) 0 0 0 rgba(255, 255, 255, 0.5),
+        inset calc(var(--window-border-size) * -1)
+          calc(var(--window-border-size) * -1) 0px 0px rgb(62 62 62 / 31%);
+    }
+
+    h2 {
+      @apply uppercase font-bold;
+      background: #cccccc;
+      font-size: 24px;
+      line-height: 10px;
+      letter-spacing: 4px;
+      text-shadow: 1.5px 1.5px 0 white;
+      padding-top: 8px;
+    }
+  }
+  .window-inner {
+    @apply p-window;
+    background: #dddddd;
+    border: var(--window-border-size) solid #454545;
+    box-shadow:
+      calc(var(--window-border-size) * -1) 0 0px 0px #acacac,
+      calc(var(--window-border-size) * -1) calc(var(--window-border-size) * -1)
+        0px 0px #acacac,
+      0 calc(var(--window-border-size) * -1) 0px 0px #acacac,
+      0 var(--window-border-size) 0px 0px white,
+      var(--window-border-size) 0 0px 0px white,
+      var(--window-border-size) var(--window-border-size) 0px 0px white;
+  }
+
+  .button {
+    background: #dddddd;
+    border-radius: 0px;
+    border: 1px solid black;
+
+    --bs: 0.5px;
+
+    --bs-1: var(--bs);
+    --bs-1n: calc(var(--bs) * -1);
+    --bs-2: calc(var(--bs) * 2);
+    --bs-2n: calc(var(--bs) * -3);
+
+    box-shadow:
+      inset var(--bs-1n) var(--bs-1n) 0 var(--bs-1) rgba(0, 0, 0, 0.2),
+      inset var(--bs-2n) var(--bs-2n) 0 var(--bs-2) rgba(0, 0, 0, 0.2),
+      inset var(--bs-1) var(--bs-1) 0 var(--bs-1) rgba(0, 0, 0, 0.2),
+      inset var(--bs-2) var(--bs-2) 0 var(--bs-2) white;
+
+    &:active {
+      box-shadow:
+        inset var(--bs-1) var(--bs-1) 0 var(--bs-1) rgba(0, 0, 0, 0.2),
+        inset var(--bs-2) var(--bs-2) 0 var(--bs-2) rgba(0, 0, 0, 0.2),
+        inset var(--bs-1n) var(--bs-1n) 0 var(--bs-1) white,
+        inset var(--bs-2n) var(--bs-2n) 0 var(--bs-2) rgba(255, 255, 255, 0.4);
+    }
+
+    @screen md {
+      --bs: 0.5px;
+    }
+  }
+
+  .textarea {
+    resize: none;
+    border: var(--window-border-size) solid #454545;
+    box-shadow:
+      calc(var(--window-border-size) * -1) 0 0px 0px #acacac,
+      calc(var(--window-border-size) * -1) calc(var(--window-border-size) * -1)
+        0px 0px #acacac,
+      0 calc(var(--window-border-size) * -1) 0px 0px #acacac,
+      0 var(--window-border-size) 0px 0px white,
+      var(--window-border-size) 0 0px 0px white,
+      var(--window-border-size) var(--window-border-size) 0px 0px white;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .code-property {
+    @apply text-secondary;
+  }
+
+  .code-value {
+    @apply text-primary;
+  }
+}

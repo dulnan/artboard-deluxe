@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'Mondwest';
+  src: url('~/assets/fonts/licensed-fonts/PPMondwest-Regular.woff2')
+    format('woff2');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Mondwest';
+  src: url('~/assets/fonts/licensed-fonts/PPMondwest-Bold.woff2')
+    format('woff2');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'NeueBit';
+  src: url('~/assets/fonts/licensed-fonts/PPNeueBit-Regular.woff2')
+    format('woff2');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'NeueBit';
+  src: url('~/assets/fonts/licensed-fonts/PPNeueBit-Bold.woff2') format('woff2');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Alliance & Data';
+  src: url('~/assets/fonts/licensed-fonts/AllianceData.woff2') format('woff2');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Pixel Code';
+  src: url('~/assets/fonts/PixelCode.woff2') format('woff2');
+  font-weight: 400;
+}

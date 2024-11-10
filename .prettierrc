@@ -1,0 +1,19 @@
+{
+  "proseWrap": "always",
+  "semi": false,
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.vue",
+      "options": {
+        "plugins": []
+      }
+    },
+    {
+      "files": "./website/tailwind.config.ts",
+      "options": {
+        "plugins": []
+      }
+    }
+  ]
+}

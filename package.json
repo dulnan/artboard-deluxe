@@ -1,0 +1,75 @@
+{
+  "name": "artboard-deluxe",
+  "version": "0.0.1",
+  "description": "Touch-friendly draggable artboard",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "zoom",
+    "pan",
+    "drag",
+    "wheel",
+    "javascript",
+    "artboard",
+    "scale",
+    "momentum",
+    "smooth",
+    "scroll"
+  ],
+  "repository": "https://github.com/dulnan/artboard-deluxe",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "unbuild",
+    "build:website": "nuxt build",
+    "dev": "nuxt dev ./website --host",
+    "generate": "nuxt generate ./website",
+    "preview": "nuxt preview ./website",
+    "postinstall": "nuxt prepare",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "generate-docs": "typedoc src/index.ts --out website/public/docs",
+    "assets:encrypt": "node ./scripts/licensed-assets/index.mjs encrypt",
+    "assets:decrypt": "node ./scripts/licensed-assets/index.mjs decrypt",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "typecheck": "tsc"
+  },
+  "author": "Jan Hug <me@dulnan.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nuxt/eslint": "^0.5.7",
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@vueuse/core": "^11.1.0",
+    "dotenv": "^16.4.5",
+    "eslint-plugin-sonarjs": "^2.0.3",
+    "eslint-plugin-tailwindcss": "^3.17.4",
+    "nuxt": "^3.13.2",
+    "nuxt-svg-icon-sprite": "^1.0.2",
+    "prettier": "^3.3.3",
+    "prettier-plugin-jsdoc": "^1.3.0",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "typedoc": "^0.26.8",
+    "typedoc-plugin-markdown": "^4.2.9",
+    "unbuild": "^2.0.0",
+    "untyped": "^1.5.1",
+    "vitepress": "^1.4.1",
+    "vitepress-plugin-sandpack": "^1.1.4",
+    "vue": "latest",
+    "vue-router": "latest"
+  }
+}
