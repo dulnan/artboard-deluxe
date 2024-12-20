@@ -544,8 +544,8 @@ export function createArtboard(
     const direction = options.direction
     const setX = direction === 'both' || direction === 'horizontal'
     const setY = direction === 'both' || direction === 'vertical'
-    const x = typeof providedX === 'number' && setX ? providedX : getCenterX()
-    const y = typeof providedY === 'number' && setY ? providedY : 0
+    const x = typeof providedX === 'number' && setX ? providedX : state.offset.x
+    const y = typeof providedY === 'number' && setY ? providedY : state.offset.y
     const boundaries = getBoundaries()
 
     if (immediate) {
