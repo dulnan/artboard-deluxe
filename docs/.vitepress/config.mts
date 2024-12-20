@@ -25,7 +25,8 @@ export default defineConfig({
         items: [
           { text: 'createArtboard', link: '/create-artboard/basics' },
           { text: 'DOM', link: '/create-artboard/dom' },
-          { text: 'Canvas (2D / WebGL)', link: '/create-artboard/canvas' }
+          { text: 'Canvas (2D / WebGL)', link: '/create-artboard/canvas' },
+          { text: 'Options', link: '/create-artboard/options' },
         ]
       },
       {

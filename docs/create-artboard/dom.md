@@ -38,8 +38,3 @@ const artboard = createArtboard(document.getElementById('root'), [
   raf(),
 ])
 ```
-
-## Event Listeners
-
-For the best user experience, Artboard adds various event listeners to the root
-element and the document.

@@ -56,8 +56,7 @@ window.requestAnimationFrame(loop)
 
 By default the artboard size is unlimited, unless explicitly set with
 `artboard.setArtboardSize()`. That way the artboard does not have a size and can
-be dragged almost infinitely (only limited by Number.POSITIVE_INFINITY and
-Number.NEGATIVE_INFINITY).
+be dragged almost infinitely (only limited by `Number.MAX_SAFE_INTEGER`).
 
 ## As a Plugin
 
