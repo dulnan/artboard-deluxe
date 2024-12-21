@@ -4,8 +4,25 @@ import { fileURLToPath } from 'url'
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'nuxt-svg-icon-sprite'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss',
+    'nuxt-svg-icon-sprite',
+    'nuxt-schema-org',
+  ],
   ssr: true,
+
+  site: {
+    title: 'Artboard Deluxe',
+    description: 'Modular TypeScript artboard library',
+    indexable: true,
+    trailingSlash: false,
+    url: 'https://artboard-deluxe.dulnan.net',
+  },
+
+  schemaOrg: {
+    reactive: false,
+  },
 
   runtimeConfig: {
     public: {
@@ -39,6 +56,13 @@ export default defineNuxtConfig({
           innerHTML: `
 document.documentElement.style.setProperty("--init-window-width", window.innerWidth);
 `,
+        },
+      ],
+      meta: [
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: '/og.jpg',
         },
       ],
     },
