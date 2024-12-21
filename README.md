@@ -1,16 +1,16 @@
 # Artboard Deluxe - Mouse and touch friendly artboard library
 
-![Screenrecording of using the artboard-deluxe library](./docs/video.gif)
-
-- Use mouse or touch gestures to pan, drag or zoom
-- Supports
-- Smooth/momentum scrolling, animations, scroll velocity
-- Works with HTML canvas (2D, WebGL)
-- Plugins for rendering scrollbars, overview or keyboard shortcuts
-
 **[Demo](https://artboard-deluxe.dulnan.net)** -
 **[Docs](https://artboard-deluxe.dulnan.net/docs)** -
 **[NPM](https://npmjs.com/package/artboard-deluxe)**
+
+- Uses mouse, touch or wheel events to pan, drag, scroll or zoom
+- Smooth/momentum scrolling, animations, scroll velocity
+- Works with a DOM element or HTML canvas (2D, WebGL)
+- Plugins for rendering scrollbars, overview or additional interactions
+- Plugin for adding keyboard shortcuts (Arrow, Page Up/Down, Ctrl+0, etc.)
+
+<img src="/dulnan/artboard-deluxe/raw/main/docs/video.gif" alt="Screen recording of using the artboard-deluxe library" width="800" height="552">
 
 ## Usage
 
