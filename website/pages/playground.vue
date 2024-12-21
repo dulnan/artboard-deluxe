@@ -224,7 +224,7 @@ const wheelOptions = [
     0.01,
     2,
     0.01,
-    1,
+    0.8,
   ),
   defineBooleanOption('interceptWheel', 'Intercept all wheel events.', true),
   defineBooleanOption(

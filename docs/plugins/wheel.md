@@ -20,11 +20,15 @@ const artboard = createArtboard(document.getElementById('root'), [
 ### Scroll
 
 Scrolling is applied in all directions on every wheel event. If the **Shift**
-key is held, scrolling is fixed to the X axis.
+key is held, the `deltaY` value of the wheel event is applied on the x axis, to
+allow horizontal scrolling using a vertical scroll wheel.
 
 ### Zoom
 
 When the **Ctrl** or **Meta** key is held, the wheel event will trigger zooming.
+When using an Apple device with a touchpad, the pinch gesture will also trigger
+zoom. This is happening automatically, since Apple sets `e.ctrlKey` to `true` in
+this case.
 
 ## Options
 
@@ -85,6 +89,24 @@ wheel({
   useMomentumScroll: true,
 })
 ```
+
+::: danger Note about Apple Devices
+
+Due to issues ([see here](https://github.com/w3c/uievents/issues/181) and
+[here](https://github.com/w3c/uievents/issues/337)) with how different browser
+and operating systems emit `wheel` events the plugin will currently disable
+momentum scrolling when the user agent indicates an Apple device. This is
+because Apple devices, when using the trackpad or "Magic Mouse", will already
+emit wheel events that simulate "momentum". In this case, if the plugin were to
+apply momentum scrolling again, the result is an extremely janky experience.
+
+It's tricky to detect whether the user is actually scrolling or if the OS is
+emitting "momentum wheel events". However it's certainly possible and planned
+for the future.
+
+The overscroll effect is still being applied when this option is set to `true`.
+
+:::
 
 ### useMomentumZoom
 

@@ -82,9 +82,11 @@ export function inlineStyleOverrider(
   }
 
   function restore() {
-    overridenStyles.entries().forEach(([property, value]) => {
-      element.style[property] = value
-    })
+    try {
+      overridenStyles.entries().forEach(([property, value]) => {
+        element.style[property] = value
+      })
+    } catch {}
   }
 
   return {

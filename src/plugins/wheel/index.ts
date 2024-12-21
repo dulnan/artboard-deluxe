@@ -1,5 +1,9 @@
+import { isMac } from '../../helpers/userAgent'
 import type { Coord } from '../../types/geometry'
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
+
+// Reasonable defaults
+const MAX_ZOOM_STEP = 10
 
 export const wheel = defineArtboardPlugin<{
   /** The scroll speed when using the mouse wheel. */
@@ -33,36 +37,48 @@ export const wheel = defineArtboardPlugin<{
   useMomentumZoom?: boolean
 }>(function (artboard, options) {
   const rootEl = artboard.getRootElement()
+  const IS_MAC = isMac()
 
-  function getDelta(e: WheelEvent): Coord {
-    if (e.shiftKey) {
-      return {
-        x: e.deltaY,
-        y: 0,
+  // Adapted from https://stackoverflow.com/a/13650579
+  /** @internal */
+  function getDelta(event: WheelEvent): Coord & { z: number } {
+    let { deltaY, deltaX } = event
+    let deltaZ = 0
+
+    // wheeling
+    if (event.ctrlKey || event.altKey || event.metaKey) {
+      deltaZ =
+        (Math.abs(deltaY) > MAX_ZOOM_STEP
+          ? MAX_ZOOM_STEP * Math.sign(deltaY)
+          : deltaY) / 100
+    } else {
+      if (event.shiftKey && !IS_MAC) {
+        deltaX = deltaY
+        deltaY = 0
       }
     }
 
-    return {
-      x: e.deltaX,
-      y: e.deltaY,
-    }
+    return { x: deltaX, y: deltaY, z: -deltaZ }
   }
 
   function onWheelRootElement(e: WheelEvent) {
+    const delta = getDelta(e)
     if (e.ctrlKey || e.metaKey) {
       artboard.cancelAnimation()
       e.preventDefault()
       e.stopPropagation()
 
-      doZoom(e.pageX, e.pageY, e.deltaY * -1)
+      doZoom(e.pageX, e.pageY, delta.z)
       return
     }
     const scrollSpeed = options.get('scrollSpeed', 1)
 
     e.preventDefault()
     e.stopPropagation()
-    const delta = getDelta(e)
-    if (options.should('useMomentumScroll')) {
+
+    const useMomentumScroll = options.should('useMomentumScroll')
+
+    if (useMomentumScroll && !IS_MAC) {
       const velocity = artboard.getMomentum() || { x: 0, y: 0 }
       artboard.setInteraction('momentum')
       artboard.setMomentum(
@@ -77,7 +93,7 @@ export const wheel = defineArtboardPlugin<{
       artboard.setOffset(
         offset.x + -(delta.x * scrollSpeed),
         offset.y + -(delta.y * scrollSpeed),
-        true,
+        !useMomentumScroll,
       )
     }
   }
@@ -88,8 +104,8 @@ export const wheel = defineArtboardPlugin<{
    * @param delta - The amount to zoom.
    */
   function doZoom(x: number, y: number, delta: number) {
-    const wheelZoomFactor = options.get('wheelZoomFactor', 1.2)
-    const scaleFactor = Math.exp(delta * wheelZoomFactor * 0.0008)
+    const wheelZoomFactor = options.get('wheelZoomFactor', 0.8)
+    const scaleFactor = Math.exp(delta * wheelZoomFactor)
     if (options.should('useMomentumZoom')) {
       const currentTarget =
         artboard.getInteraction() === 'momentumScaling'

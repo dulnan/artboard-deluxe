@@ -4,8 +4,8 @@ import { renderSandbox } from 'vitepress-plugin-sandpack';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Artboard",
-  description: "Artboard Documentation",
+  title: "artboard-deluxe",
+  description: "Documentation for the artboard-deluxe library",
   base: '/docs',
   outDir: './../website/dist/docs',
   themeConfig: {
