@@ -58,6 +58,10 @@ By default the artboard size is unlimited, unless explicitly set with
 `artboard.setArtboardSize()`. That way the artboard does not have a size and can
 be dragged almost infinitely (only limited by `Number.MAX_SAFE_INTEGER`).
 
+A possible use case is to render an "infinite" artboard using WebGL in a
+fragment shader. In this case you could use the scale and offset in the shader
+to alter the anchor point of the virtual world.
+
 ## As a Plugin
 
 You may also implement your drawing logic as a plugin.

@@ -1,5 +1,7 @@
 # Getting Started
 
+![Screenrecording of using the artboard-deluxe library](./video.gif)
+
 Install the package with your favorite package manager:
 
 ```bash

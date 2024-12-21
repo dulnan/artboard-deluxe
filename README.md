@@ -1,7 +1,9 @@
 # Artboard Deluxe - Mouse and touch friendly artboard library
 
+![Screenrecording of using the artboard-deluxe library](./docs/video.gif)
+
 - Use mouse or touch gestures to pan, drag or zoom
-- Only requires two DOM elements
+- Supports
 - Smooth/momentum scrolling, animations, scroll velocity
 - Works with HTML canvas (2D, WebGL)
 - Plugins for rendering scrollbars, overview or keyboard shortcuts
