@@ -10,7 +10,7 @@
 - Plugins for rendering scrollbars, overview or additional interactions
 - Plugin for adding keyboard shortcuts (Arrow, Page Up/Down, Ctrl+0, etc.)
 
-<img src="/dulnan/artboard-deluxe/raw/main/docs/video.gif" alt="Screen recording of using the artboard-deluxe library" width="800" height="552">
+<img src="./docs/video.gif" alt="Screen recording of using the artboard-deluxe library" width="800" height="552">
 
 ## Usage
 
