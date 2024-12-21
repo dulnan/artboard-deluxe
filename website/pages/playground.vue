@@ -4,8 +4,8 @@
   >
     <div class="col-start-1 col-span-3 row-start-3 relative z-50 md:hidden">
       <button
-        @click="optionsVisible = !optionsVisible"
         class="button w-full text-xl font-bold py-12"
+        @click="optionsVisible = !optionsVisible"
       >
         Toggle Options
       </button>

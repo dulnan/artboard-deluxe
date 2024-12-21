@@ -86,7 +86,9 @@ export function inlineStyleOverrider(
       overridenStyles.entries().forEach(([property, value]) => {
         element.style[property] = value
       })
-    } catch {}
+    } catch {
+      // Noop.
+    }
   }
 
   return {

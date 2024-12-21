@@ -13,7 +13,7 @@
           class="bg-white absolute origin-top-left artboard overflow-hidden w-[800px] h-[600px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           :class="artboardClass"
         >
-          <slot/>
+          <slot />
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@ watch(scrollbarX, function (component) {
         scrollbar({
           element: el,
           orientation: 'x',
-        })
+        }),
       )
     }
   }
@@ -105,7 +105,7 @@ watch(scrollbarY, function (component) {
         scrollbar({
           element: el,
           orientation: 'y',
-        })
+        }),
       )
     }
   }
