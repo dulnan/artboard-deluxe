@@ -8,7 +8,7 @@ type OnlyWritable<T> = {
 
 type WritableStyleProperty = keyof OnlyWritable<CSSStyleDeclaration>
 
-type InlineStyleOverrider = {
+export type InlineStyleOverrider = {
   /**
    * Sets the given style property value on the element.
    *

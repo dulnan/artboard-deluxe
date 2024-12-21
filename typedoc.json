@@ -1,5 +1,11 @@
 {
-  "basePath": "/reference",
-  "hostedBaseUrl": "https://artboard-deluxe.dulnan.net/reference",
-  "useHostedBaseUrlForAbsoluteLinks": true
+  "entryPoints": ["./src/index.ts"],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "out": "./docs/api",
+  "excludeReferences": true,
+  "docsRoot": "./docs",
+  "textContentMappings": {
+    "title.indexPage": "API",
+    "title.memberPage": "{name}"
+  }
 }

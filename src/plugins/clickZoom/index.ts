@@ -8,6 +8,14 @@ import type { AnimationOptions } from '../../helpers/animation'
  *
  * Note this plugin only handles click events originating from mouse pointers.
  * For touch devices, use the doubleTapToZoom plugin.
+ *
+ * @example
+ * ```typescript
+ * import { createArtboard, clickZoom } from 'artboard-deluxe'
+ *
+ * const root = document.elementById('root')
+ * const artboard = createArtboard(root, [clickZoom()])
+ * ```
  */
 export const clickZoom = defineArtboardPlugin<{
   animation?: Required<AnimationOptions>

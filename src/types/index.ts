@@ -5,28 +5,77 @@ import type { Boundaries, Coord, Paddings, Rectangle, Size } from './geometry'
 export type PluginOptions<T> =
   T extends ArtboardPluginDefinition<infer O> ? O : never
 
+/**
+ * Defines possible scroll directions.
+ */
 export type Direction = 'horizontal' | 'vertical' | 'both' | 'none'
 
+/**
+ * A possible return type for the getBlockingRects() method.
+ *
+ * You may either return an object compatible with `Rectangle` (such as the return value of `element.getBoundingClientRect()`) or an array of four numbers representing `[x, y, width, height]`.
+ */
 export type PossibleBlockingRect = Rectangle | [number, number, number, number]
 
 export type ArtboardPlugin<T = unknown> = {
-  /** Remove event listeners and clean up. */
+  /**
+   * Remove event listeners and clean up.
+   */
   destroy?: () => void
+
+  /**
+   * Called when the size of an element previously observed using `artboard.observeSize()` changes.
+   */
   onSizeChange?: (entry: ResizeObserverEntry) => void
+
+  /**
+   * Called in the main animation loop.
+   *
+   * Receives the state of the artboard at the time of the animation loop as an argument.
+   */
   loop?: (ctx: ArtboardLoopContext) => void
 } & T
 
 export type ArtboardPluginOptions<T extends object> = {
+  /**
+   * Get an option value.
+   */
   get<K extends keyof T>(key: K): T[K]
+
+  /**
+   * Get a required option value. If the option is not set an error is thrown.
+   */
   getRequired<K extends keyof T>(key: K): T[K]
+
+  /**
+   * Get an option that is either a DOM element or a selector.
+   *
+   * Throws an error if no element could be found.
+   */
   getElement<K extends keyof T>(
     key: K,
     fallbackSelector: string,
     parent: HTMLElement,
   ): HTMLElement
+
+  /**
+   * Returns the boolean representation of an option.
+   */
   should<K extends keyof T>(key: K): boolean
+
+  /**
+   * Get an option value with a default value.
+   */
   get<K extends keyof T>(key: K, defaultValue: T[K]): NonNullable<T[K]>
+
+  /**
+   * Set an option.
+   */
   set<K extends keyof T>(key: K, value: T[K]): void
+
+  /**
+   * Set all options at once.
+   */
   setAll(newOptions: T): void
 }
 
@@ -35,14 +84,45 @@ export type ArtboardPluginInit<T extends object> = (
   options: ArtboardPluginOptions<T>,
 ) => ArtboardPlugin
 
+/**
+ * Defines a plugin definition.
+ *
+ * This is the return value when you create a plugin, e.g. using `mouse()`.
+ * The plugin definition can then be passed as the second argument in an array to `createArtboard` or by manually adding the plugin after the artboard has been initialised using `artboard.addPlugin()`.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ArtboardPluginDefinition<T extends object = any> = {
+  /**
+   * The options instance.
+   */
   options: ArtboardPluginOptions<T>
+
+  /**
+   * The method to initlise the plugin.
+   *
+   * @internal
+   */
   init: ArtboardPluginInit<T>
 }
 
-export interface ArtboardOptions {
-  /** The initial offset. */
+/**
+ * Options for createArtboard().
+ */
+export type ArtboardOptions = {
+  /**
+   * The initial offset.
+   *
+   * @example
+   * ```typescript
+   * {
+   *   initTransform: {
+   *     x: 500,
+   *     y: 20,
+   *     scale: 1
+   *   }
+   * }
+   * ```
+   */
   initTransform?: Coord & { scale: number }
 
   /**
@@ -55,33 +135,128 @@ export interface ArtboardOptions {
    *
    * You can also provide an object with top, right, bottom and left properties
    * to define individual values per edge.
+   *
+   * @example
+   * Initialise with same bounds on all edges.
+   * ```typescript
+   * {
+   *   overscrollBounds: 20
+   * }
+   * ```
+   *
+   * @example
+   * Initialise with individual bounds per edge.
+   * ```typescript
+   * {
+   *   overscrollBounds: {
+   *     top: 50,
+   *     bottom: 50,
+   *     left: 100,
+   *     right: 70,
+   *   }
+   * }
+   * ```
    */
   overscrollBounds?: number | Paddings
 
-  /** The margin used when aligning the artboard. */
+  /**
+   * The margin used when aligning the artboard, for example when calling the
+   * `scaleToFit()` method. In this case, a value of `0` would scale the artboard to
+   * fill all the available width or height. A value of `50` would scale it so that
+   * there is at least 50px between the artboard and the root element.
+   *
+   * @example
+   * ```typescript
+   * Keeps at least 10px space between the artboard and the root element when aligning.
+   * {
+   *   margin: 10,
+   * }
+   * ```
+   */
   margin?: number
 
-  /** The amount to scroll per step. */
+  /**
+   * The amount to scroll per step, in pixels. This is used by methods like
+   * `artboard.scrollUp()`.
+   *
+   * @example
+   * Scrolls by 200px when calling for example the scrollUp() method, e.g. when
+   * pressing the ArrowUp key.
+   * ```typescript
+   * {
+   *    scrollStepAmount: 200,
+   * }
+   * ```
+   */
   scrollStepAmount?: number
 
-  /** The minimum amount the artboard can scale. */
+  /**
+   * The minimum amount the artboard can scale.
+   *
+   * @example
+   * Prevents scaling below 0.1.
+   *
+   * ```typescript
+   * {
+   *    minScale: 0.1,
+   * }
+   * ```
+   */
   minScale?: number
 
-  /** The maximum amount the artboard can scale. */
+  /**
+   * The maximum amount the artboard can scale.
+   *
+   * @example
+   * Prevents scaling above 9.
+   * ```typescript
+   * {
+   *    maxScale: 9,
+   * }
+   * ```
+   */
   maxScale?: number
 
-  /** The deceleration of the momentum scrolling. The higher the value the longer the momentum scrolling is applied. */
+  /**
+   * The deceleration of the momentum scrolling. The higher the value the longer the momentum scrolling is applied.
+   *
+   * @example
+   * ```typescript
+   * {
+   *    momentumDeceleration: 0.96
+   * }
+   * ```
+   */
   momentumDeceleration?: number
 
   /**
    * Which directions can be scrolled.
+   *
+   * Possible values are `'none'`, `'horizontal'`, `'vertical'` or `'both'` (default).
+   *
+   * @example
+   * Restrict scrolling to the Y axis on a mobile viewport.
+   * ```typescript
+   * {
+   *    direction: window.innerWidth < 768 ? 'vertical' : 'both'
+   * }
+   * ```
    */
   direction?: Direction
 
   /*
-   * How much damping to apply when overscrolling.
+   * How much damping to apply when overscrolling. A value of `1` means there is no
+   * damping applied and a value of `0` means it's not possible to overscroll.
    *
-   * A value of 1 means there is no damping applied.
+   * To see the effect of this option try to drag the artboard past its possible
+   * boundaries. Once you "overscroll" the damping is applied.
+   *
+   * @example
+   * ```typescript
+   * {
+   *    springDamping: 0.5,
+   * }
+   * ```
    */
   springDamping?: number
 
@@ -91,6 +266,15 @@ export interface ArtboardOptions {
    *
    * This information is used to center the artboard so that it (ideally)
    * remains as visible as possible.
+   *
+   * @example
+   * ```typescript
+   * function getBlockingRects() {
+   *   const toolbar = document.getElementById('toolbar')
+   *   const rect = toolbar.getBoundingClientRect()
+   *   return [rect]
+   * }
+   * ```
    */
   getBlockingRects?: () => PossibleBlockingRect[]
 
@@ -109,10 +293,22 @@ export interface ArtboardOptions {
    *
    * Note the position is always updated when the ResizeObserver callback is
    * triggered for the root element.
+   *
+   * @example
+   * Only refresh the root rect every minute.
+   *
+   * ```typescript
+   * {
+   *    rootClientRectMaxStale: 60 * 1000,
+   * }
+   * ```
    */
   rootClientRectMaxStale?: number
 }
 
+/**
+ * Options for scrolling an area of the artboard into view.
+ */
 export type ArtboardScrollIntoViewOptions = AnimationOptions & {
   /**
    * Define whether the artboard should be scaled.
@@ -145,25 +341,60 @@ export type ArtboardScrollIntoViewOptions = AnimationOptions & {
  * artboard.getOffset(), etc.
  */
 export type ArtboardLoopContext = {
-  /** The size of the root element. */
+  /**
+   * The size of the root element.
+   */
   rootSize: Size
 
-  /** The (unscaled) size of the artboard. */
+  /**
+   * The (unscaled) size of the artboard.
+   *
+   * When the artboard instance is initialised, the size of the artboard is null.
+   * When using the dom plugin, the size is set automatically from the artboard DOM
+   * element.
+   *
+   * When not using the dom plugin to render on a canvas, the size is available only
+   * when calling `artboard.setArtboardSize()`.
+   */
   artboardSize: Size | null
 
-  /** The current scale. */
+  /**
+   * The current scale.
+   *
+   * During a pinch gesture the scale value can go below minScale or above maxScale.
+   */
   scale: number
 
-  /** The current artboard offset. */
+  /**
+   * The current artboard offset.
+   *
+   * During overscrolling the offset values can go outside the defined boundaries.
+   */
   offset: Coord
 
-  /** The min/max boundaries for the artboard offset. */
+  /**
+   * The min/max boundaries for the artboard offset.
+   */
   boundaries: Boundaries
 
-  /** The current timestamp for this animation iteration. */
+  /**
+   * The current timestamp for this animation iteration.
+   *
+   * When using the raf() plugin, this is the timestamp provided by the browser to the requestAnimationFrame callback.
+   * When manually calling `artboard.loop()` this will be the same value you pass as the argument to the loop method.
+   */
   currentTime: number
 }
 
+/**
+ * The current interaction of the artboard.
+ *
+ * `'dragging'` - The artboard is being dragged using a mouse or finger.
+ * `'scaling'` - The artboard is being scaled using a mouse or finger.
+ * `'momentum'` - Momentum scrolling is being applied after a dragging interaction.
+ * `'momentumScaling'` - Momentum scaling is being applied after a scaling interaction.
+ * `'none'` - THe artboard is not being interacted with.
+ */
 export type Interaction =
   | 'dragging'
   | 'scaling'
@@ -173,16 +404,43 @@ export type Interaction =
 
 export type PossibleDragEventPosition = Array<Touch | MouseEvent> | TouchList
 
+/**
+ * The artboard instance.
+ */
 export type Artboard = {
   /**
    * Add a plugin.
+   *
+   * Use this method if you conditionally need to add or remove plugins.
+   *
+   * @example
+   * ```typescript
+   * import { createArtboard, mouse } from 'artboard-deluxe'
+   *
+   * const artboard = createArtboard(document.body)
+   * const mousePlugin = mouse()
+   * artboard.addPlugin(mousePlugin)
+   * ```
    *
    * @param plugin - The plugin to add.
    */
   addPlugin(plugin: ArtboardPluginDefinition): ArtboardPlugin
 
   /**
-   * Remove a plugin.
+   * Removes a previously added plugin.
+   *
+   * @example
+   * ```typescript
+   * import { createArtboard, clickZoom } from 'artboard-deluxe'
+   *
+   * const artboard = createArtboard(document.body)
+   * const plugin = clickZoom()
+   * artboard.addPlugin(plugin)
+   *
+   * function disableClickZoom() {
+   *   artboard.removePlugin(plugin)
+   * }
+   * ```
    *
    * @param plugin - The plugin to remove. Must be the same instance that has been added using addPlugin.
    */
@@ -216,16 +474,61 @@ export type Artboard = {
    * @returns The offset.
    */
   getFinalOffset(): Coord
+
   /**
    * Update all options.
    *
    * Note that this will reset option properties back to defaults if they are
    * missing from the provided options.
    *
+   * @example
+   * ```typescript
+   * import { createArtboard, type ArtboardOptions } from 'artboard-deluxe'
+   *
+   * function getOptions(): ArtboardOptions {
+   *   const isMobile = window.innerWidth < 768
+   *   const minScale = isMobile ? 1 : 0.1
+   *   const maxScale = isMobile ? 5 : 10
+   *   return {
+   *     minScale,
+   *     maxScale
+   *   }
+   * }
+   *
+   * const artboard = createArtboard(document.body, [], getOptions())
+   *
+   * function updateOptions() {
+   *   artboard.setOptions(getOptions())
+   * }
+   * ```
+   *
    * @param options - The full options to update.
    */
   setOptions(options: ArtboardOptions): void
+
   /**
+   * Update a single option.
+   *
+   * @example
+   * Update the minScale option when the viewport changes.
+   *
+   * ```typescript
+   * import { createArtboard } from 'artboard-deluxe'
+   *
+   * function getMinScale() {
+   *   const isMobile = window.innerWidth < 768
+   *   return isMobile ? 1 : 0.1
+   * }
+   *
+   * const artboard = createArtboard(document.body, [], {
+   *   minScale: getMinScale(),
+   * })
+   *
+   * function onViewportChange() {
+   *   artboard.setOption('minScale', getMinScale())
+   * }
+   * ```
+   *
    * @param key - The name of the option to set.
    * @param value - The value of the option to set.
    */
@@ -255,6 +558,25 @@ export type Artboard = {
    * The method returns a snapshot of the state at the time of the animation
    * frame. For the best experience you should use these values as the
    * "source of truth", for example when using a canvas for rendering.
+   *
+   * @example
+   * ```typescript
+   * import { createArtboard, dom } from 'artboard-deluxe'
+   *
+   * const artboard = createArtboard(
+   *   document.body,
+   *   [
+   *     dom(document.getElementById('artboard')))
+   *   ]
+   * )
+   *
+   * function loop(timestamp: number) {
+   *   artboard.loop(timestamp)
+   *   window.requestAnimationFrame(loop)
+   * }
+   *
+   * loop()
+   * ```
    *
    * @param currentTime - The current time.
    *
@@ -634,57 +956,122 @@ export type Artboard = {
     options?: ArtboardScrollIntoViewOptions,
   ): void
 
+  /**
+   * Get the current boundaries.
+   *
+   * @param providedTargetScale - Calculate the boundaries if the given scale were applied.
+   * @returns The boundaries.
+   */
   getBoundaries(providedTargetScale?: number): Boundaries
 
+  /**
+   * Get the current target scale.
+   *
+   * Returns null when there is no target scale.
+   *
+   * @returns The target scale.
+   */
   getScaleTarget(): ScaleTarget | null
+
+  /**
+   * Set the scale target.
+   *
+   * @param x - The target x offset.
+   * @param y - The target y offset.
+   * @param scale - The target scale.
+   */
   setScaleTarget(x: number, y: number, scale: number): void
 
+  /**
+   * Get the currently running animation.
+   *
+   * @returns The animation if it exists.
+   */
   getAnimation(): ArtboardAnimation | null
 
+  /**
+   * Determine whether the interaction before the current was momentum scrolling.
+   *
+   * This is used by plugins such as the `mouse()` plugin to prevent clicking on an element of the artboard if the user was previously momentum scrolling and clicking to stop the animation.
+   *
+   * @returns True if the previous interaction was momentum scrolling.
+   */
   wasMomentumScrolling(): boolean
 }
 
+/**
+ * The target of the scale interaction.
+ */
 export type ScaleTarget = Coord & { scale: number }
 
+/**
+ * The current momentum.
+ */
 export type Momentum = Coord & { deceleration: number }
 
 export type ArtboardState = {
-  /** The current arboard offset/translation. */
+  /**
+   * The current arboard offset/translation.
+   */
   offset: Coord
 
-  /** The current scale of the artboard. */
+  /**
+   * The current scale of the artboard.
+   */
   scale: number
 
-  /** The target state for the current animation. */
+  /**
+   * The target state for the current animation.
+   */
   animation: ArtboardAnimation | null
 
-  /** The calculated velocity of a drag gesture. */
+  /**
+   * The calculated velocity of a drag gesture.
+   */
   momentum: Momentum | null
 
-  /** The timestamp when momentum was stopped. */
+  /**
+   * The timestamp when momentum was stopped.
+   */
   momentumStopTimestamp: number
 
-  /** The native size of the artboard (without any scaling). */
+  /**
+   * The native size of the artboard (without any scaling).
+   */
   artboardSize: Size | null
 
-  /** The current interaction. */
+  /**
+   * The current interaction.
+   */
   interaction: Interaction
 
-  /** The detected touch direction. */
+  /**
+   * The detected touch direction.
+   */
   touchDirection: Direction
 
-  /** The timestamp of the last call to animateTo(). */
+  /**
+   * The timestamp of the last call to animateTo().
+   */
   lastAnimateToTimestamp: number
 
-  /** The timestamp of the last animation loop. */
+  /**
+   * The timestamp of the last animation loop.
+   */
   lastLoopTimestamp: number
 
-  /** The position of the root element relative to the viewport. */
+  /**
+   * The position of the root element relative to the viewport.
+   */
   rootRect: DOMRect
 
-  /** The native size of the root element. */
+  /**
+   * The native size of the root element.
+   */
   rootSize: Size
 
-  /** The current scaling velocity. */
+  /**
+   * The current scaling velocity.
+   */
   scaleVelocity: ScaleTarget | null
 }

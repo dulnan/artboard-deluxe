@@ -37,7 +37,7 @@ artboard.removePlugin(mousePlugin)
 
 ### options
 
-@TODO
+[See all available options](/api/type-aliases/ArtboardOptions)
 
 ## Event Listeners
 

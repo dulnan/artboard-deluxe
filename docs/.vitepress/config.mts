@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import container from 'markdown-it-container';
 import { renderSandbox } from 'vitepress-plugin-sandpack';
+import typedocSidebar from "../api/typedoc-sidebar.json";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -12,7 +13,6 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: 'https://artboard-deluxe.dulnan.net' },
-      { text: 'Reference', link: 'https://artboard-deluxe.dulnan.net/reference' }
     ],
 
     sidebar: [
@@ -26,7 +26,6 @@ export default defineConfig({
           { text: 'createArtboard', link: '/create-artboard/basics' },
           { text: 'DOM', link: '/create-artboard/dom' },
           { text: 'Canvas (2D / WebGL)', link: '/create-artboard/canvas' },
-          { text: 'Options', link: '/create-artboard/options' },
         ]
       },
       {
@@ -50,7 +49,11 @@ export default defineConfig({
           { text: 'Updating Options', link: '/advanced/updating-options' },
           { text: 'Writing a Plugin', link: '/advanced/writing-a-plugin' },
         ]
-      }
+      },
+      {
+        text: "API",
+        items: typedocSidebar,
+      },
     ],
 
     socialLinks: [

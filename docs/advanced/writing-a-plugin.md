@@ -82,6 +82,19 @@ export const zoomOverlay = defineArtboardPlugin<{
 })
 ```
 
+You can then import the plugin and use it like this:
+
+```typescript
+import { createArtboard } from 'artboard-deluxe'
+import { zoomOverlay } from './zoomOverlay'
+
+const zoomElement = document.getElementById('zoom-overlay')
+
+const artboard = createArtboard(document.body, [
+  zoomOverlay({ element: zoomElement }),
+])
+```
+
 ## Plugin methods
 
 Your plugin may return the following methods:

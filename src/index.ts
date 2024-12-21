@@ -1,5 +1,8 @@
 import { createArtboard } from './artboard/createArtboard'
-import { inlineStyleOverrider } from './helpers/inlineStyleOverrider'
+import {
+  inlineStyleOverrider,
+  type InlineStyleOverrider,
+} from './helpers/inlineStyleOverrider'
 import { defineArtboardPlugin } from './plugins/defineArtboardPlugin'
 import { clickZoom } from './plugins/clickZoom'
 import { dom } from './plugins/dom'
@@ -16,13 +19,29 @@ import type { PluginOptions } from './types'
 // Types.
 export type {
   Artboard,
+  ArtboardLoopContext,
   ArtboardOptions,
-  ArtboardScrollIntoViewOptions,
-  Direction as TouchDirection,
   ArtboardPlugin,
+  ArtboardPluginDefinition,
+  ArtboardPluginInit,
+  ArtboardPluginOptions,
+  ArtboardScrollIntoViewOptions,
+  ArtboardState,
+  Direction,
+  Interaction,
+  Momentum,
+  PossibleBlockingRect,
+  ScaleTarget,
 } from './types'
 
-export type { Coord, Rectangle, Size } from './types/geometry'
+export type {
+  Boundaries,
+  Coord,
+  Paddings,
+  Rectangle,
+  Size,
+} from './types/geometry'
+export type { AnimationOptions } from './helpers/animation'
 
 // Plugin types.
 export type PluginClickZoom = ReturnType<typeof clickZoom>
@@ -61,4 +80,5 @@ export {
   touch,
   wheel,
   raf,
+  type InlineStyleOverrider,
 }
