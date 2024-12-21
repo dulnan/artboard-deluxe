@@ -1,9 +1,18 @@
 <template>
   <div
-    class="relative bg-silver grid grid-cols-[auto_1fr_auto] grid-rows-[1fr_auto] overflow-hidden"
+    class="relative bg-silver grid grid-cols-[1fr_auto] md:grid-cols-[auto_1fr_auto] grid-rows-[1fr_auto_auto] md:grid-rows-[1fr_auto] overflow-hidden"
   >
+    <div class="col-start-1 col-span-3 row-start-3 relative z-50 md:hidden">
+      <button
+        @click="optionsVisible = !optionsVisible"
+        class="button w-full text-xl font-bold py-12"
+      >
+        Toggle Options
+      </button>
+    </div>
     <div
-      class="w-[400px] bg-silver relative z-40 col-start-1 row-start-1 row-span-2 options-pane overflow-y-scroll"
+      v-show="optionsVisible"
+      class="w-full md:w-[400px] bg-silver relative z-[100] col-start-1 col-span-3 md:col-span-1 row-start-1 row-span-2 options-pane overflow-y-scroll md:!block overscroll-contain"
       @wheel="onWheel"
     >
       <ClientOnly v-if="isReady">
@@ -46,7 +55,7 @@
     </div>
     <div
       ref="rootEl"
-      class="relative col-start-2 row-start-1 col-span-2 row-span-2 cursor-zoom-in grid items-center justify-center"
+      class="relative col-start-1 md:col-start-2 row-start-1 col-span-2 row-span-2 cursor-zoom-in grid items-center justify-center"
     >
       <img
         ref="image"
@@ -64,7 +73,7 @@
     </div>
     <div
       ref="scrollbarX"
-      class="col-start-2 col-span-1 row-start-2 overflow-hidden group relative z-50 h-28"
+      class="col-start-1 md:col-start-2 col-span-1 row-start-2 overflow-hidden group relative z-50 h-28"
     >
       <button
         class="artboard-thumb block opacity-50 group-hover:opacity-100 py-8"
@@ -118,6 +127,7 @@ import {
 import { zoomOverlay } from '~/artboardPlugins/zoomOverlay'
 
 const isReady = ref(false)
+const optionsVisible = ref(false)
 const zoomOverlayEl = ref<HTMLElement>()
 
 const optionsRect = ref<Rectangle>({
