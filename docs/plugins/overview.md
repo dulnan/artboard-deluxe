@@ -3,6 +3,8 @@
 Renders an interactive "bird's-eye view" of the artboard, its parent element and
 the visible area.
 
+<CodePen id="VYZbqym" />
+
 ## Requirements
 
 - A single DOM element that has a width and height, containing:

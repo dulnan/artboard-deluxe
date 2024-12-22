@@ -30,4 +30,5 @@ website/public/docs
 scripts/licensed-assets/source/
 website/assets/fonts/licensed-fonts/*
 docs/.vitepress/cache
+docs/api
 !.gitkeep

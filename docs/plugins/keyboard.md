@@ -2,6 +2,8 @@
 
 Adds support for keyboard shortcuts.
 
+<CodePen id="dPbWapZ" />
+
 ::: info
 
 For more flexibility you can also implement your own keyboard event listener,

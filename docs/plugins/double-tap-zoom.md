@@ -2,6 +2,8 @@
 
 Adds a "double tap to zoom" interaction on touch devices.
 
+<CodePen id="xbKdmQZ" />
+
 ## Usage
 
 No additional markup or CSS is needed.

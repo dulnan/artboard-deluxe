@@ -2,6 +2,8 @@
 
 Use the [dom](/plugins/dom) plugin to use a DOM element as the artboard.
 
+<CodePen id="YPKVdZG" />
+
 ## Requirements
 
 - The root element should be `position: relative` (or anything that creates a

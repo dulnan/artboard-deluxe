@@ -6,6 +6,8 @@ You can render your artboard using a canvas. For this you can pass in the
 Note that the library does not actually render anything on the canvas, it only
 manages the interactions and calculates the offset and scale.
 
+<CodePen id="RNbVEEL" />
+
 ## Requirements
 
 - A single HTML `<canvas>` element

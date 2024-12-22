@@ -2,6 +2,8 @@
 
 Adds a "click to zoom" interaction using the mouse.
 
+<CodePen id="WbejLKg" />
+
 ## Usage
 
 No additional markup or CSS is needed.

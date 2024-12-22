@@ -2,6 +2,8 @@
 
 Render a vertical (Y axis) or horizontal (X axis) scrollbar.
 
+<CodePen id="ZYzKVxN" />
+
 ## Requirements
 
 - A single DOM element with a width or height

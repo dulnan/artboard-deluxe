@@ -2,6 +2,8 @@
 
 Use a DOM element as the artboard.
 
+<CodePen id="YPKVdZG" />
+
 ## Usage
 
 The artboard element must be a stacking child of the root element:

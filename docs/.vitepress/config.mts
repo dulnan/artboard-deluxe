@@ -1,6 +1,4 @@
 import { defineConfig } from 'vitepress'
-import container from 'markdown-it-container'
-import { renderSandbox } from 'vitepress-plugin-sandpack'
 import typedocSidebar from '../api/typedoc-sidebar.json'
 
 // https://vitepress.dev/reference/site-config
@@ -11,8 +9,10 @@ export default defineConfig({
   outDir: './../website/dist/docs',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [{ text: 'Home', link: 'https://artboard-deluxe.dulnan.net' }],
-
+    nav: [
+      { text: 'Home', link: 'https://artboard-deluxe.dulnan.net' },
+      { text: 'Examples (CodePen)', link: 'https://codepen.io/collection/Ywyqyw'}
+    ],
     sidebar: [
       {
         text: 'Getting Started',
@@ -59,14 +59,5 @@ export default defineConfig({
     ],
   },
   markdown: {
-    config(md) {
-      md
-        // the second parameter is html tag name
-        .use(container, 'sandbox', {
-          render(tokens, idx) {
-            return renderSandbox(tokens, idx, 'sandbox')
-          },
-        })
-    },
   },
 })
