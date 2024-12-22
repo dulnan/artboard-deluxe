@@ -4,6 +4,8 @@
   "out": "./docs/api",
   "excludeReferences": true,
   "docsRoot": "./docs",
+  "readme": "none",
+  "sourceLinkTemplate": "https://github.com/dulnan/artboard-deluxe/blob/main/{path}#L{line}",
   "textContentMappings": {
     "title.indexPage": "API",
     "title.memberPage": "{name}"
