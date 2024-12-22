@@ -4,13 +4,13 @@
 **[Docs](https://artboard-deluxe.dulnan.net/docs)** -
 **[NPM](https://npmjs.com/package/artboard-deluxe)**
 
-- Uses mouse, touch or wheel events to pan, drag, scroll or zoom
+- Use mouse, touch or wheel to pan, drag, scroll or zoom
 - Smooth/momentum scrolling, animations, scroll velocity
 - Works with a DOM element or HTML canvas (2D, WebGL)
 - Plugins for rendering scrollbars, overview or additional interactions
 - Plugin for adding keyboard shortcuts (Arrow, Page Up/Down, Ctrl+0, etc.)
 
-<img src="./docs/video.gif" alt="Screen recording of using the artboard-deluxe library" width="800" height="552">
+<img src="./docs/video.gif" alt="Screen recording of using the artboard-deluxe library">
 
 ## Usage
 

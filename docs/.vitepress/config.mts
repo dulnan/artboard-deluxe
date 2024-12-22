@@ -55,7 +55,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/dulnan/dragboard' },
+      { icon: 'github', link: 'https://github.com/dulnan/artboard-deluxe' },
     ],
   },
   markdown: {
