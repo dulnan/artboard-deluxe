@@ -21,9 +21,30 @@ import type {
 } from './../types'
 import type { Boundaries, Coord, Rectangle, Size } from '../types/geometry'
 
+/**
+ * Create a new artboard instance.
+ */
 export function createArtboard(
+  /**
+   * The root element.
+   *
+   * Must be an element that creates a new stacking context (e.g. `position: relative`) when using the dom() plugin.
+   * When using canvas rendering, this should be the canvas.
+   */
   providedRootEl: HTMLElement | HTMLCanvasElement,
+
+  /**
+   * The plugins to initialise the artboard with.
+   *
+   * Plugins can also be added afterwards using the `artboard.addPlugin()` method.
+   */
   initPlugins: ArtboardPluginDefinition[] = [],
+
+  /**
+   * The init options.
+   *
+   * To update options after the artboard is initialised, use the `artboard.setOption()` and `artboard.setOptions()` methods.
+   */
   initOptions: ArtboardOptions = {},
 ): Artboard {
   /**
@@ -49,7 +70,7 @@ export function createArtboard(
       width: providedRootEl.offsetWidth,
       height: providedRootEl.offsetHeight,
     },
-    scale: initOptions?.initTransform?.scale || 0,
+    scale: initOptions?.initTransform?.scale || 1,
     touchDirection: 'none',
     momentum: null,
     momentumStopTimestamp: 0,

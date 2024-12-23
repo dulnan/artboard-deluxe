@@ -1,16 +1,7 @@
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import type { ArtboardLoopContext } from '../../types'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
-
-function adjustScaleForPrecision(
-  size: number,
-  currentScale: number,
-  precision: number,
-): number {
-  const scaledSize = size * currentScale
-  const targetSize = Math.round(scaledSize / precision) * precision
-  return targetSize / size
-}
+import { adjustScaleForPrecision } from '../../helpers'
 
 /**
  * The DOM plugin adds support for using a DOM element as the artboard.

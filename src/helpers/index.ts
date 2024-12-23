@@ -1,6 +1,16 @@
 import type { PossibleDragEventPosition, Direction } from '../types'
 import type { Boundaries, Coord, Rectangle } from '../types/geometry'
 
+export function adjustScaleForPrecision(
+  size: number,
+  currentScale: number,
+  precision: number,
+): number {
+  const scaledSize = size * currentScale
+  const targetSize = Math.round(scaledSize / precision) * precision
+  return targetSize / size
+}
+
 export function dampenRelative(
   value: number,
   min: number,

@@ -35,6 +35,7 @@ export default defineConfig({
         text: 'Plugins',
         items: [
           { text: 'clickZoom', link: '/plugins/click-zoom' },
+          { text: 'cssProperties', link: '/plugins/css-properties' },
           { text: 'dom', link: '/plugins/dom' },
           { text: 'doubleTapZoom', link: '/plugins/double-tap-zoom' },
           { text: 'keyboard', link: '/plugins/keyboard' },

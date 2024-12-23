@@ -61,7 +61,7 @@ export type ArtboardPluginOptions<T extends object> = {
   /**
    * Returns the boolean representation of an option.
    */
-  should<K extends keyof T>(key: K): boolean
+  should<K extends keyof T>(key: K, defaultValue?: T[K]): boolean
 
   /**
    * Get an option value with a default value.
