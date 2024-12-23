@@ -7,6 +7,11 @@ export default defineConfig({
   description: 'Documentation for the artboard-deluxe library',
   base: '/docs',
   outDir: './../website/dist/docs',
+  vite: {
+    server: {
+      host: '0.0.0.0'
+    }
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
