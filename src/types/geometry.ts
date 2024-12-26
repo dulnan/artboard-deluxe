@@ -23,3 +23,19 @@ export type Boundaries = {
   yMin: number
   yMax: number
 }
+
+/**
+ * The 'origin', similar to how the CSS `transform-origin` property works:
+ *   - horizontal: 'left' | 'center' | 'right'
+ *   - vertical: 'top' | 'center' | 'bottom'
+ */
+export type Origin =
+  | 'left-top'
+  | 'left-center'
+  | 'left-bottom'
+  | 'center-top'
+  | 'center-center'
+  | 'center-bottom'
+  | 'right-top'
+  | 'right-center'
+  | 'right-bottom'

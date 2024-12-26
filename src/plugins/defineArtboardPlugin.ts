@@ -8,6 +8,10 @@ function pluginOptions<T extends object>(
   providedOptions: T,
 ): ArtboardPluginOptions<T> {
   let options: T = providedOptions
+
+  // Caches computed results by callback reference
+  const computedCache = new Map<(opts: T) => unknown, { value: unknown }>()
+
   function get<K extends keyof T>(key: K, defaultValue?: T[K]): T[K] {
     const v = options ? options[key] : undefined
     if (v === undefined && defaultValue !== undefined) {
@@ -60,16 +64,35 @@ function pluginOptions<T extends object>(
     return !!v
   }
 
+  function recompute() {
+    computedCache.forEach((cacheEntry, callback) => {
+      cacheEntry.value = callback(options)
+    })
+  }
+
   function set<K extends keyof T>(key: K, value: T[K]): void {
     if (!options) {
       // @ts-ignore
       options = {}
     }
     options[key] = value
+    recompute()
   }
 
   function setAll(newOptions: T) {
     options = newOptions
+    recompute()
+  }
+
+  function computed<R>(callback: (opts: T) => R): { value: R } {
+    if (computedCache.has(callback)) {
+      return computedCache.get(callback) as { value: R }
+    }
+
+    const initialValue = callback(options)
+    const cacheEntry = { value: initialValue }
+    computedCache.set(callback, cacheEntry)
+    return cacheEntry
   }
 
   return {
@@ -79,6 +102,7 @@ function pluginOptions<T extends object>(
     should,
     set,
     setAll,
+    computed,
   }
 }
 

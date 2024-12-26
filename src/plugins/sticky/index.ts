@@ -1,0 +1,281 @@
+import { defineArtboardPlugin } from '../defineArtboardPlugin'
+import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
+import type { ArtboardLoopContext } from '../../types'
+import type { Coord, Origin, Paddings } from '../../types/geometry'
+import { withPrecision } from '../../helpers'
+
+/**
+ * Possible position values.
+ */
+export type Position =
+  | Origin
+  | {
+      x: number
+      y: number
+    }
+
+/**
+ * Either a single value for all edges or individual values per edge.
+ */
+export type Margin =
+  | number
+  | {
+      top?: number
+      right?: number
+      bottom?: number
+      left?: number
+    }
+
+type ComputedPositionOption = {
+  type: 'origin' | 'position'
+  x: number
+  y: number
+}
+
+type ComputedOptions = {
+  xMargin: number
+  yMargin: number
+  margin: Paddings
+  origin: Coord
+  position: ComputedPositionOption
+  transformOrigin: string
+}
+
+/**
+ * Parse the origin, e.g.:
+ * "left-top" => [0, 0]
+ * "center-center" => [0.5, 0.5],
+ * etc.
+ */
+function parseOrigin(origin: Origin): Coord {
+  const [horizontal, vertical] = origin.split('-') as [string, string]
+
+  const x =
+    horizontal === 'left' ? 0 : horizontal === 'center' ? 0.5 : /* 'right' */ 1
+
+  const y =
+    vertical === 'top' ? 0 : vertical === 'center' ? 0.5 : /* 'bottom' */ 1
+
+  return { x, y }
+}
+
+/**
+ * Convert the `margin` option into a normalized object with
+ * top/right/bottom/left all defined (defaults to 0).
+ */
+function parseMargin(m?: Margin): Paddings {
+  if (typeof m === 'number') {
+    return {
+      top: m,
+      right: m,
+      bottom: m,
+      left: m,
+    }
+  }
+
+  if (!m) {
+    return {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    }
+  }
+
+  return {
+    top: m.top || 0,
+    right: m.right || 0,
+    bottom: m.bottom || 0,
+    left: m.left || 0,
+  }
+}
+
+/**
+ * Anchors an element relative to the artboard with a given `position`,
+ * then shifts the element so its `origin` is at that position,
+ * applying margins according to which side of the element is anchored.
+ */
+export const sticky = defineArtboardPlugin<{
+  /**
+   * The element to make sticky.
+   */
+  element: HTMLElement
+
+  /**
+   * Whether the position styles should be applied.
+   * Defaults to `true`.
+   */
+  enabled?: boolean
+
+  /**
+   * The position relative to the artboard.
+   *
+   * Can be one of the named posistions (such as 'left-top') or an object
+   * with x and y coordinates.
+   *
+   * Defaults to 'north-west'.
+   */
+  position?: Position
+
+  /**
+   * Defines where the element “anchors” relative to `position`,
+   * similar to how the CSS transform-origin property works.
+   *
+   * Defaults to 'left-top'.
+   */
+  origin?: Origin
+
+  /**
+   * If set, the element is always kept visible within the root element's rect.
+   */
+  keepVisible?: boolean
+
+  /**
+   * The margin to apply after the element's position has been calculated.
+   *
+   * Can be a number (for all edges) or an object with separate margins for each edge.
+   */
+  margin?: Margin
+
+  /**
+   * How precise the translate3d() values should be.
+   *
+   * A value of 1 (default) means the only whole pixels are applied (e.g. 20px).
+   * A value of 0.5 means the values are rounded to the next 0.5 increment (e.g. 20.5px or 21px).
+   * A value of 10 would round to 20px, 30px, 0px, etc.
+   *
+   * Note that internally the offset is kept as a floating point number. The
+   * precision only defines how the number is rounded when setting the transform style.
+   */
+  precision?: number
+
+  /**
+   * Whether to restore the original styles after destroying the plugin instance.
+   */
+  restoreStyles?: boolean
+}>(function (artboard, options) {
+  const el = options.getRequired('element')
+  const style = inlineStyleOverrider(el)
+
+  let elWidth = el.offsetWidth
+  let elHeight = el.offsetHeight
+
+  function onSizeChange(entry: ResizeObserverEntry) {
+    if (entry.target !== el) return
+    const size = entry.borderBoxSize?.[0]
+    if (!size) return
+
+    elWidth = size.inlineSize
+    elHeight = size.blockSize
+  }
+
+  /**
+   * Precompute option-based values that don't require artboard state.
+   */
+  const computed = options.computed<ComputedOptions>(function (o) {
+    const originOption = o.origin || 'left-top'
+    const origin = parseOrigin(originOption)
+    const margin = parseMargin(o.margin)
+    const positionOption = o.position || 'left-top'
+    const position: ComputedPositionOption =
+      typeof positionOption === 'string'
+        ? { type: 'origin', ...parseOrigin(positionOption) }
+        : { type: 'position', ...positionOption }
+
+    const transformOrigin = originOption.replace('-', ' ')
+
+    let xMargin = 0
+    if (origin.x === 0) {
+      // Anchor left edge => add margin to the left.
+      xMargin += margin.left
+    } else if (origin.x === 1) {
+      // Anchor right edge => subtract margin on the right.
+      xMargin -= margin.right
+    }
+
+    let yMargin = 0
+    if (origin.y === 0) {
+      // Anchor top edge => add margin on top.
+      yMargin += margin.top
+    } else if (origin.y === 1) {
+      // Anchor bottom edge => subtract margin from bottom.
+      yMargin -= margin.bottom
+    }
+
+    return {
+      xMargin,
+      yMargin,
+      margin,
+      origin,
+      position,
+      transformOrigin,
+    }
+  })
+
+  function loop(ctx: ArtboardLoopContext) {
+    // Return if plugin is disabled.
+    if (!options.should('enabled', true)) {
+      return
+    }
+
+    const artboardWidth = (ctx.artboardSize?.width || 0) * ctx.scale
+    const artboardHeight = (ctx.artboardSize?.height || 0) * ctx.scale
+
+    const keepVisible = options.should('keepVisible')
+
+    let x =
+      computed.value.position.type === 'origin'
+        ? computed.value.position.x * artboardWidth
+        : computed.value.position.x
+
+    let y =
+      computed.value.position.type === 'origin'
+        ? computed.value.position.y * artboardHeight
+        : computed.value.position.y
+
+    x +=
+      ctx.offset.x + computed.value.xMargin - elWidth * computed.value.origin.x
+    y +=
+      ctx.offset.y + computed.value.yMargin - elHeight * computed.value.origin.y
+
+    // If keepVisible is set, make sure the element always stays visible inside
+    // the root element's rect.
+    if (keepVisible) {
+      x = Math.min(
+        Math.max(x, computed.value.margin.left),
+        ctx.rootSize.width - elWidth - computed.value.margin.right,
+      )
+      y = Math.min(
+        Math.max(y, computed.value.margin.top),
+        ctx.rootSize.height - elHeight - computed.value.margin.bottom,
+      )
+    }
+
+    const precision = options.get('precision', 0.5)
+    style.setTransform(withPrecision(x, precision), withPrecision(y, precision))
+    style.set('transformOrigin', computed.value.transformOrigin)
+  }
+
+  artboard.observeSize(el)
+
+  function destroy() {
+    artboard.unobserveSize(el)
+    if (options.should('restoreStyles')) {
+      style.restore()
+    }
+  }
+
+  style.setMultiple({
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    right: 'auto',
+    bottom: 'auto',
+  })
+
+  return {
+    destroy,
+    loop,
+    onSizeChange,
+  }
+})

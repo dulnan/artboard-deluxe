@@ -15,6 +15,7 @@ import { raf } from './plugins/raf'
 import { scrollbar } from './plugins/scrollbar'
 import { touch } from './plugins/touch'
 import { wheel } from './plugins/wheel'
+import { sticky } from './plugins/sticky'
 import type { PluginOptions } from './types'
 
 // Types.
@@ -56,6 +57,7 @@ export type PluginRaf = ReturnType<typeof raf>
 export type PluginScrollbar = ReturnType<typeof scrollbar>
 export type PluginTouch = ReturnType<typeof touch>
 export type PluginWheel = ReturnType<typeof wheel>
+export type PluginSticky = ReturnType<typeof sticky>
 
 // Plugin option types.
 export type PluginClickZoomOptions = PluginOptions<PluginClickZoom>
@@ -68,6 +70,7 @@ export type PluginOverviewOptions = PluginOptions<PluginOverview>
 export type PluginScrollbarOptions = PluginOptions<PluginScrollbar>
 export type PluginTouchOptions = PluginOptions<PluginTouch>
 export type PluginWheelOptions = PluginOptions<PluginWheel>
+export type PluginStickyOptions = PluginOptions<PluginSticky>
 
 export {
   createArtboard,
@@ -84,5 +87,6 @@ export {
   wheel,
   raf,
   cssProperties,
+  sticky,
   type InlineStyleOverrider,
 }
