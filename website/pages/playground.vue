@@ -457,8 +457,8 @@ onMounted(() => {
         margin: {
           top: 20,
         },
-        position: 'right-bottom',
-        origin: 'right-top',
+        position: 'bottom-right',
+        origin: 'top-right',
       }),
     )
   }

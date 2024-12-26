@@ -43,12 +43,12 @@ type ComputedOptions = {
 
 /**
  * Parse the origin, e.g.:
- * "left-top" => [0, 0]
+ * "top-left" => [0, 0]
  * "center-center" => [0.5, 0.5],
  * etc.
  */
 function parseOrigin(origin: Origin): Coord {
-  const [horizontal, vertical] = origin.split('-') as [string, string]
+  const [vertical, horizontal] = origin.split('-') as [string, string]
 
   const x =
     horizontal === 'left' ? 0 : horizontal === 'center' ? 0.5 : /* 'right' */ 1
@@ -110,7 +110,7 @@ export const sticky = defineArtboardPlugin<{
   /**
    * The position relative to the artboard.
    *
-   * Can be one of the named posistions (such as 'left-top') or an object
+   * Can be one of the named posistions (such as 'top-left') or an object
    * with x and y coordinates.
    *
    * Defaults to 'north-west'.
@@ -121,14 +121,9 @@ export const sticky = defineArtboardPlugin<{
    * Defines where the element “anchors” relative to `position`,
    * similar to how the CSS transform-origin property works.
    *
-   * Defaults to 'left-top'.
+   * Defaults to 'top-left'.
    */
   origin?: Origin
-
-  /**
-   * If set, the element is always kept visible within the root element's rect.
-   */
-  keepVisible?: boolean
 
   /**
    * The margin to apply after the element's position has been calculated.
@@ -136,6 +131,11 @@ export const sticky = defineArtboardPlugin<{
    * Can be a number (for all edges) or an object with separate margins for each edge.
    */
   margin?: Margin
+
+  /**
+   * If set, the element is always kept visible within the root element's rect.
+   */
+  keepVisible?: boolean
 
   /**
    * How precise the translate3d() values should be.
@@ -173,10 +173,10 @@ export const sticky = defineArtboardPlugin<{
    * Precompute option-based values that don't require artboard state.
    */
   const computed = options.computed<ComputedOptions>(function (o) {
-    const originOption = o.origin || 'left-top'
+    const originOption = o.origin || 'top-left'
     const origin = parseOrigin(originOption)
     const margin = parseMargin(o.margin)
-    const positionOption = o.position || 'left-top'
+    const positionOption = o.position || 'top-left'
     const position: ComputedPositionOption =
       typeof positionOption === 'string'
         ? { type: 'origin', ...parseOrigin(positionOption) }

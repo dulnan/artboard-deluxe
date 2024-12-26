@@ -43,6 +43,7 @@ export default defineConfig({
           { text: 'overview', link: '/plugins/overview' },
           { text: 'raf', link: '/plugins/raf' },
           { text: 'scrollbar', link: '/plugins/scrollbar' },
+          { text: 'sticky', link: '/plugins/sticky' },
           { text: 'touch', link: '/plugins/touch' },
           { text: 'wheel', link: '/plugins/wheel' },
         ],
