@@ -77,6 +77,13 @@ export type ArtboardPluginOptions<T extends object> = {
    * Set all options at once.
    */
   setAll(newOptions: T): void
+
+  /**
+   * Compute and cache a value based on the current options.
+   *
+   * If any option is changed (via set or setAll), the cache is cleared.
+   */
+  computed<R>(callback: (options: T) => R): { value: R }
 }
 
 export type ArtboardPluginInit<T extends object> = (

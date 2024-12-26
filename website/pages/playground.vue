@@ -65,7 +65,10 @@
         class="artboard-image image-pixelated touch-none pointer-events-none"
       />
 
-      <div class="absolute bottom-0 right-8 md:text-xl">
+      <div
+        ref="copyright"
+        class="absolute bottom-0 right-8 md:text-xl bg-silver px-12"
+      >
         Image: © Bill Bertram 2006
       </div>
 
@@ -106,6 +109,7 @@ import {
   raf,
   clickZoom,
   doubleTapZoom,
+  sticky,
   type Rectangle,
   type Artboard,
   type PluginScrollbar,
@@ -129,6 +133,7 @@ import { zoomOverlay } from '~/artboardPlugins/zoomOverlay'
 const isReady = ref(false)
 const optionsVisible = ref(false)
 const zoomOverlayEl = ref<HTMLElement>()
+const copyright = ref<HTMLElement>()
 
 const optionsRect = ref<Rectangle>({
   x: 0,
@@ -443,6 +448,21 @@ onMounted(() => {
     })
     artboard.addPlugin(scrollbarPluginY)
   }
+
+  if (copyright.value) {
+    artboard.addPlugin(
+      sticky({
+        element: copyright.value,
+        keepVisible: true,
+        margin: {
+          top: 20,
+        },
+        position: 'right-bottom',
+        origin: 'right-top',
+      }),
+    )
+  }
+
   isReady.value = true
 
   console.log(optionsCode.value)

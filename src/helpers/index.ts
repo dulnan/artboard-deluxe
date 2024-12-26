@@ -193,7 +193,7 @@ export function getDirection(a: Coord, b: Coord, threshold: number): Direction {
 }
 
 export function getEventCoords(e: MouseEvent | TouchEvent): Coord {
-  if (e instanceof TouchEvent) {
+  if (isTouchEvent(e)) {
     return {
       x: e.touches[0].pageX,
       y: e.touches[0].pageY,
@@ -203,4 +203,12 @@ export function getEventCoords(e: MouseEvent | TouchEvent): Coord {
     x: e.pageX,
     y: e.pageY,
   }
+}
+
+export function isTouchEvent(e: unknown): e is TouchEvent {
+  return window.TouchEvent && e instanceof TouchEvent
+}
+
+export function withPrecision(value: number, precision: number): number {
+  return Math.ceil(value / precision) * precision
 }
