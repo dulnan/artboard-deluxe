@@ -72,15 +72,15 @@ const artboardEl = ref<HTMLDivElement>()
 let artboard: Artboard | null = null
 
 const origins: Origin[] = [
-  'left-top',
-  'left-center',
-  'left-bottom',
-  'center-top',
+  'top-left',
+  'center-left',
+  'bottom-left',
+  'top-center',
   'center-center',
-  'center-bottom',
-  'right-top',
-  'right-center',
-  'right-bottom',
+  'bottom-center',
+  'top-right',
+  'center-right',
+  'bottom-right',
 ]
 
 const hasMargin = ref(false)
