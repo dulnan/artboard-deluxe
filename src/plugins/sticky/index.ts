@@ -162,12 +162,12 @@ export const sticky = defineArtboardPlugin<{
     let x =
       computed.value.position.type === 'origin'
         ? computed.value.position.x * artboardWidth
-        : computed.value.position.x
+        : computed.value.position.x * ctx.scale
 
     let y =
       computed.value.position.type === 'origin'
         ? computed.value.position.y * artboardHeight
-        : computed.value.position.y
+        : computed.value.position.y * ctx.scale
 
     x +=
       ctx.offset.x + computed.value.xMargin - elWidth * computed.value.origin.x
