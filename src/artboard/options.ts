@@ -1,20 +1,10 @@
+import { parseEdges, withDefault } from '../helpers'
 import type { Edge } from '../types/geometry'
 import type { ArtboardOptions, Direction } from './../types'
 
 type OptionsState = {
   options: ArtboardOptions
   overscrollBounds: Edge
-}
-
-function withDefault(
-  v: number | null | undefined,
-  defaultValue: number,
-): number {
-  if (v === undefined || v === null) {
-    return defaultValue
-  }
-
-  return v
 }
 
 function createOptions(initOptions?: ArtboardOptions) {
@@ -29,26 +19,7 @@ function createOptions(initOptions?: ArtboardOptions) {
   }
 
   function calculateOverscrollBounds() {
-    if (
-      state.options.overscrollBounds === undefined ||
-      state.options.overscrollBounds === null
-    ) {
-      state.overscrollBounds = {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30,
-      }
-    } else if (typeof state.options.overscrollBounds === 'number') {
-      state.overscrollBounds = {
-        top: state.options.overscrollBounds,
-        right: state.options.overscrollBounds,
-        bottom: state.options.overscrollBounds,
-        left: state.options.overscrollBounds,
-      }
-    } else {
-      state.overscrollBounds = { ...state.options.overscrollBounds }
-    }
+    state.overscrollBounds = parseEdges(state.options.overscrollBounds, 30)
   }
 
   function setAllOptions(newOptions?: ArtboardOptions) {

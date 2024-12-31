@@ -2,11 +2,8 @@ import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
 import type { Coord, Edge, Origin } from '../../types/geometry'
-import { withPrecision, parseOrigin } from '../../helpers'
+import { withPrecision, parseOrigin, parseEdges } from '../../helpers'
 
-/**
- * Either a single value for all edges or individual values per edge.
- */
 type Margin = number | Partial<Edge>
 
 type ComputedPositionOption = {
@@ -22,37 +19,6 @@ type ComputedOptions = {
   origin: Coord
   position: ComputedPositionOption
   transformOrigin: string
-}
-
-/**
- * Convert the `margin` option into a normalized object with
- * top/right/bottom/left all defined (defaults to 0).
- */
-function parseMargin(m?: Margin): Edge {
-  if (typeof m === 'number') {
-    return {
-      top: m,
-      right: m,
-      bottom: m,
-      left: m,
-    }
-  }
-
-  if (!m) {
-    return {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    }
-  }
-
-  return {
-    top: m.top || 0,
-    right: m.right || 0,
-    bottom: m.bottom || 0,
-    left: m.left || 0,
-  }
 }
 
 /**
@@ -145,7 +111,7 @@ export const sticky = defineArtboardPlugin<{
   const computed = options.computed<ComputedOptions>(function (o) {
     const originOption = o.origin || 'top-left'
     const origin = parseOrigin(originOption)
-    const margin = parseMargin(o.margin)
+    const margin = parseEdges(o.margin)
     const positionOption = o.position || 'top-left'
     const position: ComputedPositionOption =
       typeof positionOption === 'string'

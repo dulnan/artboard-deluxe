@@ -1,5 +1,11 @@
 import type { PossibleDragEventPosition, Direction } from '../types'
-import type { Boundaries, Coord, Origin, Rectangle } from '../types/geometry'
+import type {
+  Boundaries,
+  Coord,
+  Edge,
+  Origin,
+  Rectangle,
+} from '../types/geometry'
 
 export function adjustScaleForPrecision(
   size: number,
@@ -229,4 +235,46 @@ export function parseOrigin(origin: Origin): Coord {
     vertical === 'top' ? 0 : vertical === 'center' ? 0.5 : /* 'bottom' */ 1
 
   return { x, y }
+}
+
+export function withDefault(
+  v: number | null | undefined,
+  defaultValue: number,
+): number {
+  if (v === undefined || v === null) {
+    return defaultValue
+  }
+
+  return v
+}
+
+/**
+ * Convert the `margin` option into a normalized object with
+ * top/right/bottom/left all defined (defaults to 0).
+ */
+export function parseEdges(v?: Partial<Edge> | number, defaultValue = 0): Edge {
+  if (typeof v === 'number') {
+    return {
+      top: v,
+      right: v,
+      bottom: v,
+      left: v,
+    }
+  }
+
+  if (!v) {
+    return {
+      top: defaultValue,
+      right: defaultValue,
+      bottom: defaultValue,
+      left: defaultValue,
+    }
+  }
+
+  return {
+    top: withDefault(v.top, defaultValue),
+    right: withDefault(v.right, defaultValue),
+    bottom: withDefault(v.bottom, defaultValue),
+    left: withDefault(v.left, defaultValue),
+  }
 }
