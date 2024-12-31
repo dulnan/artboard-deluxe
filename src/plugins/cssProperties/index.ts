@@ -1,6 +1,14 @@
+import { withPrecision } from '../../helpers'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
+
+type Property =
+  | '--artboard-offset-x'
+  | '--artboard-offset-y'
+  | '--artboard-scale'
+  | '--artboard-size-width'
+  | '--artboard-size-height'
 
 /**
  * Sets the artboard state as CSS custom properties/variables on the given element or root element.
@@ -30,19 +38,9 @@ export const cssProperties = defineArtboardPlugin<{
   unitless?: boolean
 
   /**
-   * Set's the --artboard-offset-x property.
+   * Define which CSS properties to set.
    */
-  setOffsetX?: boolean
-
-  /**
-   * Set's the --artboard-offset-y property.
-   */
-  setOffsetY?: boolean
-
-  /**
-   * Set's the --artboard-scale property.
-   */
-  setScale?: boolean
+  properties: Property[]
 
   /**
    * Restore original CSS properties on destroy.
@@ -54,27 +52,43 @@ export const cssProperties = defineArtboardPlugin<{
   const element = options.get('element') || artboard.getRootElement()
   const style = inlineStyleOverrider(element)
 
-  function getValue(v: number): number | string {
+  function getValue(v: number, precision: number): number | string {
     if (options.should('unitless')) {
-      return v.toString()
+      return withPrecision(v, precision).toString()
     }
 
-    return v
+    return withPrecision(v, precision)
   }
+
+  const properties = options.computed<Partial<Record<Property, boolean>>>(
+    function (o) {
+      return Object.fromEntries(o.properties.map((v) => [v, true]))
+    },
+  )
 
   function loop(ctx: ArtboardLoopContext) {
     const precision = options.get('precision', 0.5)
-    if (options.should('setOffsetX', true)) {
-      const x = getValue(Math.ceil(ctx.offset.x / precision) * precision)
+    if (properties.value['--artboard-offset-x']) {
+      const x = getValue(ctx.offset.x, precision)
       style.setProperty('--artboard-offset-x', x)
     }
 
-    if (options.should('setOffsetY', true)) {
-      const y = getValue(Math.ceil(ctx.offset.y / precision) * precision)
+    if (properties.value['--artboard-offset-y']) {
+      const y = getValue(ctx.offset.y, precision)
       style.setProperty('--artboard-offset-y', y)
     }
 
-    if (options.should('setScale', true)) {
+    if (properties.value['--artboard-size-width']) {
+      const width = getValue(ctx.artboardSize?.width || 0, precision)
+      style.setProperty('--artboard-size-width', width)
+    }
+
+    if (properties.value['--artboard-size-height']) {
+      const height = getValue(ctx.artboardSize?.height || 0, precision)
+      style.setProperty('--artboard-size-height', height)
+    }
+
+    if (properties.value['--artboard-scale']) {
       style.setProperty('--artboard-scale', ctx.scale.toString())
     }
   }
