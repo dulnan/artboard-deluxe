@@ -4,20 +4,38 @@ Makes an element stick to the artboard at a given position.
 
 ## Usage
 
-The element should be a child of the root element or have the same origin as the
-root element. The plugin will set a CSS `position` value of `absolute` on the
+The element's absolute origin must be in the top left corner of the root
+element. This is automatically the case if the element is placed as a direct
+child of the root element.
+
+Note that the plugin will set a CSS `position` value of `absolute` on the
 element.
 
 ### Example with `dom()` plugin
 
-The sticky element is a child of the root element. This ensures the calculated
-sticky position matches the coordinate space.
+Here the sticky element with class `overlay` is a direct child of the root
+element.
 
 ```html
-<div id="root-element" class="relative">
+<div id="root" class="relative">
   <div id="artboard">This is the artboard.</div>
   <div id="overlay">Hello World</div>
 </div>
+```
+
+```typescript
+import { createArtboard, raf, sticky, mouse, dom } from 'artboard-deluxe'
+
+const artboard = createArtboard(document.getElementById('root'), [
+  dom({
+    element: document.getElementById('artboard'),
+  }),
+  raf(),
+  mouse(),
+  sticky({
+    element: document.getElementById('overlay'),
+  }),
+])
 ```
 
 ### Example with `<canvas>`
@@ -28,22 +46,9 @@ can wrap both the canvas and the sticky element in another element that has
 
 ```html
 <div class="relative">
-  <canvas id="root-element" width="1200" height="800"></canvas>
+  <canvas id="root" width="1200" height="800"></canvas>
   <div id="overlay">Hello World</div>
 </div>
-```
-
-```typescript
-import { createArtboard, raf, sticky, mouse, wheel } from 'artboard-deluxe'
-
-const artboard = createArtboard(document.getElementById('root'), [
-  raf(),
-  mouse(),
-  wheel(),
-  sticky({
-    element: document.getElementById('overlay'),
-  }),
-])
 ```
 
 ## Positioning
