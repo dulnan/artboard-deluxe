@@ -26,10 +26,12 @@
         >
           <div>
             <div>
-              <span>position:</span><span>{{ position }}</span>
-            </div>
-            <div>
-              <span>origin:</span><span>{{ origin }}</span>
+              <div>
+                <span>position:</span><span>{{ position }}</span>
+              </div>
+              <div>
+                <span>origin:</span><span>{{ origin }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -42,9 +44,11 @@
         class="page-sticky-box"
       >
         <div>
-          <div><span>position:</span><span>{x:200, y:200}</span></div>
           <div>
-            <span>origin:</span><span>{{ origin }}</span>
+            <div><span>position:</span><span>{x:200, y:200}</span></div>
+            <div>
+              <span>origin:</span><span>{{ origin }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -162,17 +166,23 @@ onBeforeUnmount(() => {
   width: 280px;
 
   &:hover {
-    > div {
-      @apply text-white bg-orange  border-orange scale-125;
+    > div > div {
+      @apply scale-100 opacity-100;
     }
   }
 
   > div {
     transform-origin: inherit;
-    @apply text-transparent px-12 font-mono py-4 border border-gray-700/20 pointer-events-none;
-    @apply transition;
+    @apply font-mono border border-gray-700/20 pointer-events-none;
+    width: 280px;
     > div {
-      @apply flex justify-between;
+      transform-origin: inherit;
+      width: 280px;
+      @apply text-white bg-orange border-orange px-12 py-4 scale-50 opacity-0;
+      @apply transition;
+      > div {
+        @apply flex justify-between;
+      }
     }
   }
 }
