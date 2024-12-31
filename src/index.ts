@@ -36,13 +36,7 @@ export type {
   ScaleTarget,
 } from './types'
 
-export type {
-  Boundaries,
-  Coord,
-  Paddings,
-  Rectangle,
-  Size,
-} from './types/geometry'
+export type { Boundaries, Coord, Edge, Rectangle, Size } from './types/geometry'
 export type { AnimationOptions } from './helpers/animation'
 
 // Plugin types.

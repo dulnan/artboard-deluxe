@@ -8,7 +8,10 @@ export type Coord = {
   y: number
 }
 
-export type Paddings = {
+/**
+ * Edges of a rectangle.
+ */
+export type Edge = {
   top: number
   right: number
   bottom: number

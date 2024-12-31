@@ -1,30 +1,13 @@
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
-import type { Coord, Origin, Paddings } from '../../types/geometry'
+import type { Coord, Edge, Origin } from '../../types/geometry'
 import { withPrecision, parseOrigin } from '../../helpers'
-
-/**
- * Possible position values.
- */
-export type Position =
-  | Origin
-  | {
-      x: number
-      y: number
-    }
 
 /**
  * Either a single value for all edges or individual values per edge.
  */
-export type Margin =
-  | number
-  | {
-      top?: number
-      right?: number
-      bottom?: number
-      left?: number
-    }
+type Margin = number | Partial<Edge>
 
 type ComputedPositionOption = {
   type: 'origin' | 'position'
@@ -35,7 +18,7 @@ type ComputedPositionOption = {
 type ComputedOptions = {
   xMargin: number
   yMargin: number
-  margin: Paddings
+  margin: Edge
   origin: Coord
   position: ComputedPositionOption
   transformOrigin: string
@@ -45,7 +28,7 @@ type ComputedOptions = {
  * Convert the `margin` option into a normalized object with
  * top/right/bottom/left all defined (defaults to 0).
  */
-function parseMargin(m?: Margin): Paddings {
+function parseMargin(m?: Margin): Edge {
   if (typeof m === 'number') {
     return {
       top: m,
@@ -97,7 +80,12 @@ export const sticky = defineArtboardPlugin<{
    *
    * Defaults to 'north-west'.
    */
-  position?: Position
+  position?:
+    | Origin
+    | {
+        x: number
+        y: number
+      }
 
   /**
    * Defines where the element “anchors” relative to `position`,

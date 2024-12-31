@@ -1,9 +1,9 @@
-import type { Paddings } from '../types/geometry'
+import type { Edge } from '../types/geometry'
 import type { ArtboardOptions, Direction } from './../types'
 
 type OptionsState = {
   options: ArtboardOptions
-  overscrollBounds: Paddings
+  overscrollBounds: Edge
 }
 
 function withDefault(
@@ -79,7 +79,7 @@ function createOptions(initOptions?: ArtboardOptions) {
       return !!state.options.getBlockingRects
     },
 
-    get overscrollBounds(): Paddings {
+    get overscrollBounds(): Edge {
       return state.overscrollBounds
     },
 
