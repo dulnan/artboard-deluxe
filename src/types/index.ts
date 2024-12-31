@@ -1,6 +1,6 @@
 import type { Options } from '../artboard/options'
 import type { AnimationOptions, ArtboardAnimation } from '../helpers/animation'
-import type { Boundaries, Coord, Paddings, Rectangle, Size } from './geometry'
+import type { Boundaries, Coord, Edge, Rectangle, Size } from './geometry'
 
 export type PluginOptions<T> =
   T extends ArtboardPluginDefinition<infer O> ? O : never
@@ -164,7 +164,7 @@ export type ArtboardOptions = {
    * }
    * ```
    */
-  overscrollBounds?: number | Paddings
+  overscrollBounds?: number | Edge
 
   /**
    * The margin used when aligning the artboard, for example when calling the
