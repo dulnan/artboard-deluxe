@@ -1,5 +1,5 @@
 import type { PossibleDragEventPosition, Direction } from '../types'
-import type { Boundaries, Coord, Rectangle } from '../types/geometry'
+import type { Boundaries, Coord, Origin, Rectangle } from '../types/geometry'
 
 export function adjustScaleForPrecision(
   size: number,
@@ -211,4 +211,22 @@ export function isTouchEvent(e: unknown): e is TouchEvent {
 
 export function withPrecision(value: number, precision: number): number {
   return Math.ceil(value / precision) * precision
+}
+
+/**
+ * Parse the origin, e.g.:
+ * "top-left" => [0, 0]
+ * "center-center" => [0.5, 0.5],
+ * etc.
+ */
+export function parseOrigin(origin: Origin): Coord {
+  const [vertical, horizontal] = origin.split('-') as [string, string]
+
+  const x =
+    horizontal === 'left' ? 0 : horizontal === 'center' ? 0.5 : /* 'right' */ 1
+
+  const y =
+    vertical === 'top' ? 0 : vertical === 'center' ? 0.5 : /* 'bottom' */ 1
+
+  return { x, y }
 }

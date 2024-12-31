@@ -1,6 +1,6 @@
 # sticky()
 
-Makes an element stick to the artboard.
+Makes an element stick to the artboard at a given position.
 
 ## Usage
 
@@ -46,14 +46,10 @@ const artboard = createArtboard(document.getElementById('root'), [
 ])
 ```
 
-## Options
-
-[See all options](/api/functions/sticky.html#parameters)
-
 ## Positioning
 
 There are four options that let you define how the sticky element should be
-positioned.
+positioned. `position` and `origin` define the general location of the element.
 
 <Origins />
 
@@ -88,3 +84,7 @@ per edge.
 
 When set to `true`, the element will always remain visible and stick to the
 edges of the root element.
+
+## Options
+
+[See all options](/api/functions/sticky.html#parameters)

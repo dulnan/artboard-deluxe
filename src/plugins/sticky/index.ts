@@ -2,7 +2,7 @@ import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
 import type { Coord, Origin, Paddings } from '../../types/geometry'
-import { withPrecision } from '../../helpers'
+import { withPrecision, parseOrigin } from '../../helpers'
 
 /**
  * Possible position values.
@@ -39,24 +39,6 @@ type ComputedOptions = {
   origin: Coord
   position: ComputedPositionOption
   transformOrigin: string
-}
-
-/**
- * Parse the origin, e.g.:
- * "top-left" => [0, 0]
- * "center-center" => [0.5, 0.5],
- * etc.
- */
-function parseOrigin(origin: Origin): Coord {
-  const [vertical, horizontal] = origin.split('-') as [string, string]
-
-  const x =
-    horizontal === 'left' ? 0 : horizontal === 'center' ? 0.5 : /* 'right' */ 1
-
-  const y =
-    vertical === 'top' ? 0 : vertical === 'center' ? 0.5 : /* 'bottom' */ 1
-
-  return { x, y }
 }
 
 /**
