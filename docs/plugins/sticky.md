@@ -13,6 +13,8 @@ element.
 
 ### Example with `dom()` plugin
 
+<CodePen id="RNbLLQg" />
+
 Here the sticky element with class `overlay` is a direct child of the root
 element.
 
@@ -39,6 +41,8 @@ const artboard = createArtboard(document.getElementById('root'), [
 ```
 
 ### Example with `<canvas>`
+
+<CodePen id="GgKMMvv" />
 
 Since the root element is the `<canvas>` we can't add a child to it. However, we
 can wrap both the canvas and the sticky element in another element that has
