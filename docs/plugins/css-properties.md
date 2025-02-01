@@ -23,7 +23,7 @@ const artboard = createArtboard(document.getElementById('root'), [
     properties: [
       '--artboard-offset-x',
       '--artboard-offset-y',
-      '--artboard-offset-scale',
+      '--artboard-scale',
       '--artboard-size-width',
       '--artboard-size-height',
     ],

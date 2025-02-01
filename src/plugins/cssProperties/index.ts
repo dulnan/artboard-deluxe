@@ -9,6 +9,8 @@ type Property =
   | '--artboard-scale'
   | '--artboard-size-width'
   | '--artboard-size-height'
+  | '--artboard-root-width'
+  | '--artboard-root-height'
 
 /**
  * Sets the artboard state as CSS custom properties/variables on the given element or root element.
@@ -86,6 +88,16 @@ export const cssProperties = defineArtboardPlugin<{
     if (properties.value['--artboard-size-height']) {
       const height = getValue(ctx.artboardSize?.height || 0, precision)
       style.setProperty('--artboard-size-height', height)
+    }
+
+    if (properties.value['--artboard-root-width']) {
+      const width = getValue(ctx.rootSize.width, precision)
+      style.setProperty('--artboard-root-width', width)
+    }
+
+    if (properties.value['--artboard-root-height']) {
+      const height = getValue(ctx.rootSize.height, precision)
+      style.setProperty('--artboard-root-height', height)
     }
 
     if (properties.value['--artboard-scale']) {
