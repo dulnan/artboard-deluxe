@@ -73,6 +73,10 @@
       </div>
 
       <div ref="zoomOverlayEl" class="font-mono absolute" />
+
+      <div id="offsets">
+        <div></div>
+      </div>
     </div>
     <div
       ref="scrollbarX"
@@ -108,6 +112,7 @@ import {
   dom,
   raf,
   clickZoom,
+  cssProperties,
   doubleTapZoom,
   sticky,
   type Rectangle,
@@ -157,7 +162,7 @@ const artboardOptions = [
     400,
     1,
     400,
-    'px',
+    'px'
   ),
   defineRangeOption(
     'margin',
@@ -166,7 +171,7 @@ const artboardOptions = [
     100,
     1,
     10,
-    'px',
+    'px'
   ),
   defineRangeOption(
     'scrollStepAmount',
@@ -175,7 +180,7 @@ const artboardOptions = [
     512,
     1,
     256,
-    'px',
+    'px'
   ),
   defineRangeOption(
     'minScale',
@@ -183,7 +188,7 @@ const artboardOptions = [
     0.02,
     1,
     0.01,
-    0.1,
+    0.1
   ),
   defineRangeOption(
     'maxScale',
@@ -191,7 +196,7 @@ const artboardOptions = [
     1,
     26,
     0.01,
-    12,
+    12
   ),
   defineRangeOption(
     'momentumDeceleration',
@@ -199,7 +204,7 @@ const artboardOptions = [
     0.7,
     0.999,
     0.001,
-    0.95,
+    0.95
   ),
 
   defineRangeOption(
@@ -208,7 +213,7 @@ const artboardOptions = [
     0.1,
     1,
     0.01,
-    0.5,
+    0.5
   ),
 ]
 
@@ -220,7 +225,7 @@ const scrollbarOptions = [
     500,
     1,
     100,
-    'px',
+    'px'
   ),
 ]
 
@@ -231,7 +236,7 @@ const wheelOptions = [
     0.1,
     2,
     0.01,
-    1,
+    1
   ),
   defineRangeOption(
     'wheelZoomFactor',
@@ -239,18 +244,18 @@ const wheelOptions = [
     0.01,
     2,
     0.01,
-    0.8,
+    0.8
   ),
   defineBooleanOption('interceptWheel', 'Intercept all wheel events.', true),
   defineBooleanOption(
     'useMomentumScroll',
     'Apply momentum scrolling when using wheel.',
-    true,
+    true
   ),
   defineBooleanOption(
     'useMomentumZoom',
     'Apply momentum zooming when using wheel.',
-    true,
+    true
   ),
 ]
 
@@ -258,12 +263,12 @@ const mouseOptions = [
   defineBooleanOption(
     'setCursor',
     'Set a dragging cursor on the root element.',
-    false,
+    false
   ),
   defineBooleanOption(
     'useSpacebar',
     'Only allow dragging while holding the spacebar.',
-    false,
+    false
   ),
   defineRangeOption(
     'scrollDirectionThreshold',
@@ -272,7 +277,7 @@ const mouseOptions = [
     45,
     1,
     30,
-    '°',
+    '°'
   ),
   defineVelocityOption(
     'velocity',
@@ -282,7 +287,7 @@ const mouseOptions = [
       maxVelocity: 6000,
       minVelocity: 10,
       multiplicator: 1.2,
-    },
+    }
   ),
 ]
 
@@ -293,7 +298,7 @@ const domOptions = [
     0.1,
     15,
     0.1,
-    1,
+    1
   ),
 ]
 
@@ -308,7 +313,7 @@ const touchOptions = [
   defineBooleanOption(
     'twoTouchScrolling',
     'Require two touch points to scroll.',
-    true,
+    true
   ),
   defineAnimationOption(
     'overscaleAnimation',
@@ -316,7 +321,7 @@ const touchOptions = [
     {
       duration: 300,
       easing: 'easeOutBack',
-    },
+    }
   ),
   defineVelocityOption(
     'velocity',
@@ -326,7 +331,7 @@ const touchOptions = [
       maxVelocity: 5000,
       minVelocity: 20,
       multiplicator: 1.35,
-    },
+    }
   ),
   defineRangeOption(
     'scrollDirectionThreshold',
@@ -335,7 +340,7 @@ const touchOptions = [
     45,
     1,
     30,
-    '°',
+    '°'
   ),
 ]
 
@@ -421,17 +426,29 @@ onMounted(() => {
       pluginDom,
       pluginClickZoom,
       pluginDoubleTapZoom,
+      cssProperties({
+        unitless: true,
+        properties: [
+          '--artboard-offset-x',
+          '--artboard-offset-y',
+          '--artboard-scale',
+          '--artboard-size-width',
+          '--artboard-size-height',
+          '--artboard-root-width',
+          '--artboard-root-height',
+        ],
+      }),
       raf(),
     ],
     {
       getBlockingRects,
-    },
+    }
   )
   if (zoomOverlayEl.value) {
     artboard.addPlugin(
       zoomOverlay({
         element: zoomOverlayEl.value,
-      }),
+      })
     )
   }
   if (scrollbarX.value) {
@@ -459,7 +476,7 @@ onMounted(() => {
         },
         position: 'bottom-right',
         origin: 'top-right',
-      }),
+      })
     )
   }
 
@@ -479,5 +496,47 @@ onBeforeUnmount(() => {
 .options-pane {
   border-right: 8px ridge #eee;
   background: #cccccc;
+}
+
+#offsets {
+  --size: 100px;
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: white;
+  width: var(--size);
+  height: var(--size);
+  outline: 1px solid black;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#offsets > div {
+  --dot-size: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  background: red;
+  border-radius: 100%;
+
+  --max: calc(var(--size) - var(--dot-size));
+
+  --bounds-x-min: calc(var(--artboard-size-width) * var(--artboard-scale) * -1);
+  --bounds-x-max: var(--artboard-root-width);
+  --progress-x: (var(--artboard-offset-x) - var(--bounds-x-min)) /
+    (var(--bounds-x-max) - var(--bounds-x-min));
+  --x: min(max(var(--progress-x) * var(--max), 0px), var(--max));
+
+  --bounds-y-min: calc(
+    var(--artboard-size-height) * var(--artboard-scale) * -1
+  );
+  --bounds-y-max: var(--artboard-root-height);
+  --progress-y: (var(--artboard-offset-y) - var(--bounds-y-min)) /
+    (var(--bounds-y-max) - var(--bounds-y-min));
+  --y: min(max(var(--progress-y) * var(--max), 0px), var(--max));
+
+  transform: translate(var(--x), var(--y));
 }
 </style>
