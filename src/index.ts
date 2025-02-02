@@ -16,7 +16,7 @@ import { scrollbar } from './plugins/scrollbar'
 import { touch } from './plugins/touch'
 import { wheel } from './plugins/wheel'
 import { sticky } from './plugins/sticky'
-import type { PluginOptions } from './types'
+import type { ArtboardPlugin, PluginOptions } from './types'
 
 // Types.
 export type {
@@ -65,6 +65,13 @@ export type PluginScrollbarOptions = PluginOptions<PluginScrollbar>
 export type PluginTouchOptions = PluginOptions<PluginTouch>
 export type PluginWheelOptions = PluginOptions<PluginWheel>
 export type PluginStickyOptions = PluginOptions<PluginSticky>
+
+type PluginInstance<T> =
+  T extends ReturnType<typeof defineArtboardPlugin<any, infer R extends object>>
+    ? ArtboardPlugin<R>
+    : never
+
+export type PluginStickyInstance = PluginInstance<typeof sticky>
 
 export {
   createArtboard,

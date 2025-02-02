@@ -369,8 +369,6 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
       })
     }
 
-    artboard.observeSize(overviewEl)
-
     if (overviewEl.style.position === 'static') {
       overviewElStyleOverrider.set('position', 'relative')
     }
@@ -398,6 +396,8 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
 
     overviewEl.addEventListener('pointerdown', onPointerDown)
     overviewEl.addEventListener('touchstart', onTouchStart)
+
+    artboard.observeSize(overviewEl)
 
     return {
       destroy,

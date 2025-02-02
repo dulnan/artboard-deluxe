@@ -58,7 +58,7 @@ import OverviewComponent from './../components/Overview/index.vue'
 import {
   type Rectangle,
   type Artboard,
-  type PluginSticky,
+  type PluginStickyInstance,
   keyboard,
   scrollbar,
   overview,
@@ -175,7 +175,7 @@ const drawnBounds = {
 const brushSize = 40
 
 let artboard: Artboard | null = null
-let stickyPlugin: PluginSticky | null = null
+let stickyPlugin: PluginStickyInstance | null = null
 let raf: null | number = null
 
 let mouseXRelative = 0
@@ -323,6 +323,8 @@ function onPointerUp() {
 function loop(currentTime: number) {
   if (!artboard) return
 
+  if (!stickyPlugin) return
+
   const loopContext = artboard.loop(currentTime)
   const ctx = canvas.value?.getContext('2d')
   artboardScale = loopContext.scale
@@ -393,6 +395,18 @@ function loop(currentTime: number) {
       h,
     )
   }
+
+  const stickyRect = stickyPlugin.getRect()
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+  ctx.beginPath()
+  ctx.rect(stickyRect.x, stickyRect.y, stickyRect.width, stickyRect.height)
+  ctx.fill()
+
+  ctx.font = '27px Pixel Code'
+  ctx.fillStyle = 'black'
+  ctx.textRendering = 'optimizeSpeed'
+  ctx.fillText('2D Canvas', stickyRect.x + 9, stickyRect.y + 29)
 
   // Draw brush preview.
   if (!isResizing.value && !isDragging) {
@@ -652,17 +666,20 @@ function initArtboard() {
 
   artboard.setArtboardSize(artboardSize.value.width, artboardSize.value.height)
 
-  stickyPlugin = sticky({
-    target: () => {
-      return {
-        width: 80,
-        height: 80,
-      }
-    },
-  })
-
-  const instance = artboard.addPlugin(stickyPlugin)
-  console.log(instance)
+  stickyPlugin = artboard.addPlugin(
+    sticky({
+      target: () => {
+        return {
+          width: 179,
+          height: 40,
+        }
+      },
+      origin: 'bottom-left',
+      margin: 0,
+      keepVisible: true,
+      precision: 1,
+    }),
+  )
 
   if (scrollbarY.value) {
     const el = scrollbarY.value.getElement()
