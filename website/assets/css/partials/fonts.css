@@ -36,3 +36,9 @@
   src: url('~/assets/fonts/PixelCode.woff2') format('woff2');
   font-weight: 400;
 }
+
+@font-face {
+  font-family: 'MS Sans Serif';
+  src: url('~/assets/fonts/ms_sans_serif.woff2') format('woff2');
+  font-weight: 400;
+}

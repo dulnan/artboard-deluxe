@@ -43,7 +43,12 @@ const fontSize: Record<string, [string, string]> = {
 }
 
 const config: Config = {
-  content: ['./app.vue', './assets/css/*.css', './components/**/*.{vue,ts,js}'],
+  content: [
+    './app.vue',
+    './assets/css/*.css',
+    './components/**/*.{vue,ts,js}',
+    './error.vue',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -51,6 +56,7 @@ const config: Config = {
         serif: ['"Mondwest"', 'sans-serif'],
         alliance: ['"Alliance & Data"', 'serif'],
         mono: ['"Pixel Code"', 'monospace'],
+        ms: ['"MS Sans Serif"', 'sans-serif'],
       },
       colors: {
         silver: 'silver',
