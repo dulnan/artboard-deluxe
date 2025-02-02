@@ -108,14 +108,15 @@ function pluginOptions<T extends object>(
 
 export function defineArtboardPlugin<
   T extends object,
+  R extends object = object,
   V = object extends T ? true : false,
 >(
-  init: ArtboardPluginInit<T>,
+  init: ArtboardPluginInit<T, R>,
 ): V extends true
   ? // No option properties are required.
-    (options?: T) => ArtboardPluginDefinition<T>
+    (options?: T) => ArtboardPluginDefinition<T, R>
   : // Some option properties are required, thus an object argument is required.
-    (options: T) => ArtboardPluginDefinition<T> {
+    (options: T) => ArtboardPluginDefinition<T, R> {
   return function (providedOptions?: T) {
     const options = pluginOptions(providedOptions as T)
     return {

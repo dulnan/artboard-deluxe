@@ -1,5 +1,5 @@
 <template>
-  <div class="relative canvas-2d-scene" :style="sceneStyle">
+  <div class="relative canvas-2d-scene" :style="sceneStyle as any">
     <div ref="root" class="grid-area-c relative">
       <div class="absolute top-0 left-0 size-full">
         <canvas
@@ -58,6 +58,7 @@ import OverviewComponent from './../components/Overview/index.vue'
 import {
   type Rectangle,
   type Artboard,
+  type PluginSticky,
   keyboard,
   scrollbar,
   overview,
@@ -65,6 +66,7 @@ import {
   touch,
   wheel,
   createArtboard,
+  sticky,
 } from 'artboard-deluxe'
 import { rgbToHex } from '~/helper/colors'
 import { isInsideRect } from '~/helper'
@@ -173,6 +175,7 @@ const drawnBounds = {
 const brushSize = 40
 
 let artboard: Artboard | null = null
+let stickyPlugin: PluginSticky | null = null
 let raf: null | number = null
 
 let mouseXRelative = 0
@@ -648,6 +651,18 @@ function initArtboard() {
   )
 
   artboard.setArtboardSize(artboardSize.value.width, artboardSize.value.height)
+
+  stickyPlugin = sticky({
+    target: () => {
+      return {
+        width: 80,
+        height: 80,
+      }
+    },
+  })
+
+  const instance = artboard.addPlugin(stickyPlugin)
+  console.log(instance)
 
   if (scrollbarY.value) {
     const el = scrollbarY.value.getElement()

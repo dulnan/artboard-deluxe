@@ -469,7 +469,7 @@ onMounted(() => {
   if (copyright.value) {
     artboard.addPlugin(
       sticky({
-        element: copyright.value,
+        target: copyright.value,
         keepVisible: true,
         margin: {
           top: 20,
