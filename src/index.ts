@@ -99,4 +99,6 @@ export {
   cssProperties,
   sticky,
   type InlineStyleOverrider,
+  type PluginOptions,
+  type PluginInstance,
 }

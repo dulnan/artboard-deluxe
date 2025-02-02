@@ -4,6 +4,7 @@ import type { Boundaries, Coord, Edge, Rectangle, Size } from './geometry'
 
 // Extract the plugin options.
 export type PluginOptions<T> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends ArtboardPluginDefinition<infer O, any> ? O : never
 
 // Infer a fully initialised plugin instance.
@@ -450,6 +451,7 @@ export type Artboard = {
    *
    * @param plugin - The plugin to add.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addPlugin<T extends ArtboardPluginDefinition<any, any>>(
     plugin: T,
   ): T extends ArtboardPluginDefinition<infer O, infer R>

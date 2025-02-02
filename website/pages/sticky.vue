@@ -2,7 +2,7 @@
   <div class="relative bg-silver h-full overflow-hidden">
     <div ref="rootEl" class="relative h-full">
       <div>
-        <button @click="hasMargin = !hasMargin" class="button text-xl">
+        <button class="button text-xl" @click="hasMargin = !hasMargin">
           Toggle Margin
         </button>
       </div>
