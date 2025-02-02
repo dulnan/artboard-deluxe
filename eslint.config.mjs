@@ -16,7 +16,6 @@ export default withNuxt([
       'vue/no-v-html': 0,
       'vue/no-empty-component-block': 'error',
       'vue/padding-line-between-blocks': 'error',
-      'vue/no-v-for-template-key': 'error',
       'vue/prefer-true-attribute-shorthand': 'error',
       'vue/component-api-style': 'error',
       'vue/multi-word-component-names': 'off',

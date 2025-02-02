@@ -38,6 +38,7 @@ export function createArtboard(
    *
    * Plugins can also be added afterwards using the `artboard.addPlugin()` method.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initPlugins: ArtboardPluginDefinition<any, any>[] = [],
 
   /**
@@ -1006,6 +1007,7 @@ export function createArtboard(
   }
 
   function addPlugin<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     T extends ArtboardPluginDefinition<any, any>,
     ReturnType = T extends ArtboardPluginDefinition<infer O, infer R>
       ? ArtboardPluginInstance<O, R>

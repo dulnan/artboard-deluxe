@@ -4,7 +4,7 @@
       <label>
         <div>position</div>
         <select v-model="position">
-          <option v-for="v in origins" :value="v" :key="'position' + v">
+          <option v-for="v in origins" :key="'position' + v" :value="v">
             {{ v }}
           </option>
         </select>
@@ -12,7 +12,7 @@
       <label>
         <div>origin</div>
         <select v-model="origin">
-          <option v-for="v in origins" :value="v" :key="'position' + v">
+          <option v-for="v in origins" :key="'origin' + v" :value="v">
             {{ v }}
           </option>
         </select>

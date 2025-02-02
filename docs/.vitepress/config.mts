@@ -9,14 +9,17 @@ export default defineConfig({
   outDir: './../website/dist/docs',
   vite: {
     server: {
-      host: '0.0.0.0'
-    }
+      host: '0.0.0.0',
+    },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: 'https://artboard-deluxe.dulnan.net' },
-      { text: 'Examples (CodePen)', link: 'https://codepen.io/collection/Ywyqyw'}
+      {
+        text: 'Examples (CodePen)',
+        link: 'https://codepen.io/collection/Ywyqyw',
+      },
     ],
     sidebar: [
       {
@@ -65,6 +68,5 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/dulnan/artboard-deluxe' },
     ],
   },
-  markdown: {
-  },
+  markdown: {},
 })
