@@ -75,7 +75,7 @@
       <div ref="zoomOverlayEl" class="font-mono absolute" />
 
       <div id="offsets">
-        <div></div>
+        <div />
       </div>
     </div>
     <div
@@ -117,14 +117,14 @@ import {
   sticky,
   type Rectangle,
   type Artboard,
-  type PluginScrollbar,
-  type PluginMouse,
-  type PluginWheel,
-  type PluginTouch,
-  type PluginKeyboard,
-  type PluginDom,
-  type PluginClickZoom,
-  type PluginDoubleTapZoom,
+  type PluginScrollbarFactory,
+  type PluginMouseFactory,
+  type PluginWheelFactory,
+  type PluginTouchFactory,
+  type PluginKeyboardFactory,
+  type PluginDomFactory,
+  type PluginClickZoomFactory,
+  type PluginDoubleTapZoomFactory,
 } from 'artboard-deluxe'
 import {
   defineAnimationOption,
@@ -162,7 +162,7 @@ const artboardOptions = [
     400,
     1,
     400,
-    'px'
+    'px',
   ),
   defineRangeOption(
     'margin',
@@ -171,7 +171,7 @@ const artboardOptions = [
     100,
     1,
     10,
-    'px'
+    'px',
   ),
   defineRangeOption(
     'scrollStepAmount',
@@ -180,7 +180,7 @@ const artboardOptions = [
     512,
     1,
     256,
-    'px'
+    'px',
   ),
   defineRangeOption(
     'minScale',
@@ -188,7 +188,7 @@ const artboardOptions = [
     0.02,
     1,
     0.01,
-    0.1
+    0.1,
   ),
   defineRangeOption(
     'maxScale',
@@ -196,7 +196,7 @@ const artboardOptions = [
     1,
     26,
     0.01,
-    12
+    12,
   ),
   defineRangeOption(
     'momentumDeceleration',
@@ -204,7 +204,7 @@ const artboardOptions = [
     0.7,
     0.999,
     0.001,
-    0.95
+    0.95,
   ),
 
   defineRangeOption(
@@ -213,7 +213,7 @@ const artboardOptions = [
     0.1,
     1,
     0.01,
-    0.5
+    0.5,
   ),
 ]
 
@@ -225,7 +225,7 @@ const scrollbarOptions = [
     500,
     1,
     100,
-    'px'
+    'px',
   ),
 ]
 
@@ -236,7 +236,7 @@ const wheelOptions = [
     0.1,
     2,
     0.01,
-    1
+    1,
   ),
   defineRangeOption(
     'wheelZoomFactor',
@@ -244,18 +244,18 @@ const wheelOptions = [
     0.01,
     2,
     0.01,
-    0.8
+    0.8,
   ),
   defineBooleanOption('interceptWheel', 'Intercept all wheel events.', true),
   defineBooleanOption(
     'useMomentumScroll',
     'Apply momentum scrolling when using wheel.',
-    true
+    true,
   ),
   defineBooleanOption(
     'useMomentumZoom',
     'Apply momentum zooming when using wheel.',
-    true
+    true,
   ),
 ]
 
@@ -263,12 +263,12 @@ const mouseOptions = [
   defineBooleanOption(
     'setCursor',
     'Set a dragging cursor on the root element.',
-    false
+    false,
   ),
   defineBooleanOption(
     'useSpacebar',
     'Only allow dragging while holding the spacebar.',
-    false
+    false,
   ),
   defineRangeOption(
     'scrollDirectionThreshold',
@@ -277,7 +277,7 @@ const mouseOptions = [
     45,
     1,
     30,
-    '°'
+    '°',
   ),
   defineVelocityOption(
     'velocity',
@@ -287,7 +287,7 @@ const mouseOptions = [
       maxVelocity: 6000,
       minVelocity: 10,
       multiplicator: 1.2,
-    }
+    },
   ),
 ]
 
@@ -298,7 +298,7 @@ const domOptions = [
     0.1,
     15,
     0.1,
-    1
+    1,
   ),
 ]
 
@@ -313,7 +313,7 @@ const touchOptions = [
   defineBooleanOption(
     'twoTouchScrolling',
     'Require two touch points to scroll.',
-    true
+    true,
   ),
   defineAnimationOption(
     'overscaleAnimation',
@@ -321,7 +321,7 @@ const touchOptions = [
     {
       duration: 300,
       easing: 'easeOutBack',
-    }
+    },
   ),
   defineVelocityOption(
     'velocity',
@@ -331,7 +331,7 @@ const touchOptions = [
       maxVelocity: 5000,
       minVelocity: 20,
       multiplicator: 1.35,
-    }
+    },
   ),
   defineRangeOption(
     'scrollDirectionThreshold',
@@ -340,7 +340,7 @@ const touchOptions = [
     45,
     1,
     30,
-    '°'
+    '°',
   ),
 ]
 
@@ -386,15 +386,15 @@ const scrollbarX = ref<HTMLDivElement>()
 const scrollbarY = ref<HTMLDivElement>()
 
 let artboard: Artboard | null = null
-let scrollbarPluginX: PluginScrollbar | null = null
-let scrollbarPluginY: PluginScrollbar | null = null
-let pluginMouse: PluginMouse | null = null
-let pluginWheel: PluginWheel | null = null
-let pluginTouch: PluginTouch | null = null
-let pluginKeyboard: PluginKeyboard | null = null
-let pluginDom: PluginDom | null = null
-let pluginClickZoom: PluginClickZoom | null = null
-let pluginDoubleTapZoom: PluginDoubleTapZoom | null = null
+let scrollbarPluginX: PluginScrollbarFactory | null = null
+let scrollbarPluginY: PluginScrollbarFactory | null = null
+let pluginMouse: PluginMouseFactory | null = null
+let pluginWheel: PluginWheelFactory | null = null
+let pluginTouch: PluginTouchFactory | null = null
+let pluginKeyboard: PluginKeyboardFactory | null = null
+let pluginDom: PluginDomFactory | null = null
+let pluginClickZoom: PluginClickZoomFactory | null = null
+let pluginDoubleTapZoom: PluginDoubleTapZoomFactory | null = null
 
 function onWheel(e: WheelEvent) {
   if (e.ctrlKey || e.metaKey) {
@@ -442,13 +442,13 @@ onMounted(() => {
     ],
     {
       getBlockingRects,
-    }
+    },
   )
   if (zoomOverlayEl.value) {
     artboard.addPlugin(
       zoomOverlay({
         element: zoomOverlayEl.value,
-      })
+      }),
     )
   }
   if (scrollbarX.value) {
@@ -476,7 +476,7 @@ onMounted(() => {
         },
         position: 'bottom-right',
         origin: 'top-right',
-      })
+      }),
     )
   }
 

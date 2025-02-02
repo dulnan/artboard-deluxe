@@ -218,6 +218,7 @@ export const scrollbar = defineArtboardPlugin<{
   })
 
   return {
+    options,
     destroy,
     loop,
     onSizeChange,

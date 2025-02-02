@@ -24,6 +24,7 @@ export const zoomOverlay = defineArtboardPlugin<{
   let prevZoom = 0
 
   return {
+    options,
     destroy() {
       styles.restore()
     },

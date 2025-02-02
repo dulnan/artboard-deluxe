@@ -52,10 +52,14 @@ export const zoomOverlay = defineArtboardPlugin<{
   let prevZoom = 0
 
   return {
+    // Return the options helper.
+    options,
+
     // Restore the original styles that may have been overriden.
     destroy() {
       styles.restore()
     },
+
     // Method called in a requestAnimationFrame callback.
     loop(ctx) {
       if (!ctx.artboardSize) {
@@ -129,4 +133,73 @@ function onSizeChange(entry: ResizeObserverEntry) {
 
   // Do something.
 }
+```
+
+## Types
+
+The library export some helper types for plugins:
+
+### PluginOptions
+
+This type "extracts" the options of a plugin:
+
+```typescript
+import { defineArtboardPlugin, type PluginOptions } from 'artboard-deluxe'
+
+const myPlugin = defineArtboardPlugin<{ myOption: string }>(
+  function (artboard, options) {
+    return {
+      options,
+    }
+  },
+)
+
+// Resulting type: { myOption: string }
+type MyPluginOptions = PluginOptions<ReturnType<typeof myPlugin>>
+```
+
+## PluginInstance
+
+The type for a fully initialised plugin instance.
+
+```typescript
+import {
+  defineArtboardPlugin,
+  createArtboard,
+  type PluginInstance,
+} from 'artboard-deluxe'
+
+const myPlugin = defineArtboardPlugin<
+  { myOption: string },
+  { returnSomething: () => string }
+>(function (artboard, options) {
+  function returnSomething() {
+    return 'Foobar'
+  }
+
+  return {
+    options,
+    returnSomething,
+  }
+})
+
+const artboard = createArtboard()
+
+// Create a type for an instance of your plugin.
+type MyPluginInstance = PluginInstance<ReturnType<typeof myPlugin>>
+
+const instance: MyPluginInstance = artboard.addPlugin(
+  myPlugin({ myOption: 'Hello' }),
+)
+```
+
+All options and additional returned properties/methods (`returnSomething()` in
+our case) are properly typed:
+
+```typescript
+// Access plugin methods.
+console.log(instance.returnSomething())
+
+// Access fully typed options.
+console.log(instance.options.get('myOption'))
 ```

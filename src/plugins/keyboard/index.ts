@@ -90,6 +90,7 @@ export const keyboard = defineArtboardPlugin<{
   }
 
   return {
+    options,
     destroy,
   }
 })

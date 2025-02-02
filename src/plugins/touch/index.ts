@@ -353,6 +353,7 @@ export const touch = defineArtboardPlugin<{
   })
 
   return {
+    options,
     destroy,
   }
 })

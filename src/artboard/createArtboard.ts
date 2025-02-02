@@ -11,7 +11,7 @@ import type {
   Artboard,
   ArtboardLoopContext,
   ArtboardOptions,
-  ArtboardPlugin,
+  ArtboardPluginInstance,
   ArtboardPluginDefinition,
   ArtboardScrollIntoViewOptions,
   ArtboardState,
@@ -38,7 +38,7 @@ export function createArtboard(
    *
    * Plugins can also be added afterwards using the `artboard.addPlugin()` method.
    */
-  initPlugins: ArtboardPluginDefinition[] = [],
+  initPlugins: ArtboardPluginDefinition<any, any>[] = [],
 
   /**
    * The init options.
@@ -84,7 +84,7 @@ export function createArtboard(
   const rootEl = providedRootEl
 
   /** Plugins. */
-  let plugins: ArtboardPlugin[] = []
+  let plugins: ArtboardPluginInstance[] = []
 
   let resizeTimeout: number | null = null
   let init = true
@@ -1006,9 +1006,9 @@ export function createArtboard(
   }
 
   function addPlugin<
-    T extends ArtboardPluginDefinition,
-    ReturnType = T extends ArtboardPluginDefinition<any, infer R>
-      ? ArtboardPlugin<R>
+    T extends ArtboardPluginDefinition<any, any>,
+    ReturnType = T extends ArtboardPluginDefinition<infer O, infer R>
+      ? ArtboardPluginInstance<O, R>
       : never,
   >(plugin: T): ReturnType {
     const pluginInstance = plugin.init(artboard, plugin.options)
@@ -1016,7 +1016,7 @@ export function createArtboard(
     return pluginInstance as ReturnType
   }
 
-  function removePlugin(plugin: ArtboardPlugin) {
+  function removePlugin(plugin: ArtboardPluginInstance) {
     if (plugin.destroy) {
       plugin.destroy()
     }

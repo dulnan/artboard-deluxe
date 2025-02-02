@@ -119,7 +119,7 @@ onMounted(() => {
     ],
     {
       overscrollBounds: 0,
-    }
+    },
   )
 
   origins.forEach((origin) => {
@@ -129,16 +129,19 @@ onMounted(() => {
         return
       }
 
-      const plugin = sticky({
-        target: el,
-        position,
-        origin,
-        keepVisible: true,
-        precision: 1,
-        margin: 0,
-      })
-      artboard?.addPlugin(plugin)
-      plugins.push(plugin)
+      const instance = artboard?.addPlugin(
+        sticky({
+          target: el,
+          position,
+          origin,
+          keepVisible: true,
+          precision: 1,
+          margin: 0,
+        }),
+      )
+      if (instance) {
+        plugins.push(instance)
+      }
     })
 
     const el = document.getElementById('manual-' + origin)
@@ -146,16 +149,19 @@ onMounted(() => {
       return
     }
 
-    const plugin = sticky({
-      target: el,
-      position: { x: 200, y: 200 },
-      origin,
-      keepVisible: true,
-      precision: 1,
-      margin: 0,
-    })
-    artboard?.addPlugin(plugin)
-    plugins.push(plugin)
+    const instance = artboard?.addPlugin(
+      sticky({
+        target: el,
+        position: { x: 200, y: 200 },
+        origin,
+        keepVisible: true,
+        precision: 1,
+        margin: 0,
+      }),
+    )
+    if (instance) {
+      plugins.push(instance)
+    }
   })
 })
 

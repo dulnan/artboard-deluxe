@@ -167,6 +167,7 @@ export const dom = defineArtboardPlugin<{
   }
 
   return {
+    options,
     loop,
     destroy,
     onSizeChange,

@@ -155,6 +155,7 @@ export const wheel = defineArtboardPlugin<{
   }
 
   return {
+    options,
     destroy,
   }
 })

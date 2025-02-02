@@ -222,6 +222,7 @@ export const mouse = defineArtboardPlugin<{
   })
 
   return {
+    options,
     destroy,
   }
 })

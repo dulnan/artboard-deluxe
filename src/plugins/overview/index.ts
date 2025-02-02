@@ -400,6 +400,7 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
     artboard.observeSize(overviewEl)
 
     return {
+      options,
       destroy,
       loop,
       onSizeChange,
