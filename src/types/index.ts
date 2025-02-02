@@ -86,10 +86,10 @@ export type ArtboardPluginOptions<T extends object> = {
   computed<R>(callback: (options: T) => R): { value: R }
 }
 
-export type ArtboardPluginInit<T extends object> = (
+export type ArtboardPluginInit<T extends object, R extends object = object> = (
   artboard: Artboard,
   options: ArtboardPluginOptions<T>,
-) => ArtboardPlugin
+) => ArtboardPlugin<R>
 
 /**
  * Defines a plugin definition.
@@ -98,7 +98,10 @@ export type ArtboardPluginInit<T extends object> = (
  * The plugin definition can then be passed as the second argument in an array to `createArtboard` or by manually adding the plugin after the artboard has been initialised using `artboard.addPlugin()`.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ArtboardPluginDefinition<T extends object = any> = {
+export type ArtboardPluginDefinition<
+  T extends object = any,
+  R extends object = object,
+> = {
   /**
    * The options instance.
    */
@@ -109,7 +112,7 @@ export type ArtboardPluginDefinition<T extends object = any> = {
    *
    * @internal
    */
-  init: ArtboardPluginInit<T>
+  init: ArtboardPluginInit<T, R>
 }
 
 /**
@@ -431,7 +434,11 @@ export type Artboard = {
    *
    * @param plugin - The plugin to add.
    */
-  addPlugin(plugin: ArtboardPluginDefinition): ArtboardPlugin
+  addPlugin<T extends ArtboardPluginDefinition>(
+    plugin: T,
+  ): T extends ArtboardPluginDefinition<never, infer R>
+    ? ArtboardPlugin<R>
+    : ArtboardPlugin
 
   /**
    * Removes a previously added plugin.

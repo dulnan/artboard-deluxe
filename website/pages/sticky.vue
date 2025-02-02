@@ -101,20 +101,26 @@ onMounted(() => {
   if (!rootEl.value || !artboardEl.value) {
     return
   }
-  artboard = createArtboard(rootEl.value, [
-    mouse(),
-    wheel({
-      useMomentumZoom: true,
-      useMomentumScroll: true,
-    }),
-    raf(),
-    keyboard(),
-    dom({
-      element: artboardEl.value,
-      setInitTransformFromRect: true,
-      precision: 1,
-    }),
-  ])
+  artboard = createArtboard(
+    rootEl.value,
+    [
+      mouse(),
+      wheel({
+        useMomentumZoom: true,
+        useMomentumScroll: true,
+      }),
+      raf(),
+      keyboard(),
+      dom({
+        element: artboardEl.value,
+        setInitTransformFromRect: true,
+        precision: 1,
+      }),
+    ],
+    {
+      overscrollBounds: 0,
+    }
+  )
 
   origins.forEach((origin) => {
     origins.forEach((position) => {
@@ -124,7 +130,7 @@ onMounted(() => {
       }
 
       const plugin = sticky({
-        element: el,
+        target: el,
         position,
         origin,
         keepVisible: true,
@@ -141,7 +147,7 @@ onMounted(() => {
     }
 
     const plugin = sticky({
-      element: el,
+      target: el,
       position: { x: 200, y: 200 },
       origin,
       keepVisible: true,

@@ -1,7 +1,7 @@
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
-import type { Coord, Edge, Origin } from '../../types/geometry'
+import type { Coord, Edge, Origin, Size } from '../../types/geometry'
 import { withPrecision, parseOrigin, parseEdges } from '../../helpers'
 
 type Margin = number | Partial<Edge>
@@ -21,88 +21,101 @@ type ComputedOptions = {
   transformOrigin: string
 }
 
+type TargetVirtual = () => Size
+
 /**
  * Anchors an element relative to the artboard with a given `position`,
- * then shifts the element so its `origin` is at that position,
- * applying margins according to which side of the element is anchored.
+ * then shifts the element so its `origin` is at that position and
+ * adding margins according to which side of the element is anchored.
  */
-export const sticky = defineArtboardPlugin<{
-  /**
-   * The element to make sticky.
-   */
-  element: HTMLElement
+export const sticky = defineArtboardPlugin<
+  {
+    /**
+     * The target to make sticky.
+     */
+    target: HTMLElement | TargetVirtual
 
-  /**
-   * Whether the position styles should be applied.
-   * Defaults to `true`.
-   */
-  enabled?: boolean
+    /**
+     * Whether the position styles should be applied.
+     * Defaults to `true`.
+     */
+    enabled?: boolean
 
-  /**
-   * The position relative to the artboard.
-   *
-   * Can be one of the named posistions (such as 'top-left') or an object
-   * with x and y coordinates.
-   *
-   * Defaults to 'north-west'.
-   */
-  position?:
-    | Origin
-    | {
-        x: number
-        y: number
-      }
+    /**
+     * The position relative to the artboard.
+     *
+     * Can be one of the named posistions (such as 'top-left') or an object
+     * with x and y coordinates.
+     *
+     * Defaults to 'north-west'.
+     */
+    position?:
+      | Origin
+      | {
+          x: number
+          y: number
+        }
 
-  /**
-   * Defines where the element “anchors” relative to `position`,
-   * similar to how the CSS transform-origin property works.
-   *
-   * Defaults to 'top-left'.
-   */
-  origin?: Origin
+    /**
+     * Defines where the element “anchors” relative to `position`,
+     * similar to how the CSS transform-origin property works.
+     *
+     * Defaults to 'top-left'.
+     */
+    origin?: Origin
 
-  /**
-   * The margin to apply after the element's position has been calculated.
-   *
-   * Can be a number (for all edges) or an object with separate margins for each edge.
-   */
-  margin?: Margin
+    /**
+     * The margin to apply after the element's position has been calculated.
+     *
+     * Can be a number (for all edges) or an object with separate margins for each edge.
+     */
+    margin?: Margin
 
-  /**
-   * If set, the element is always kept visible within the root element's rect.
-   */
-  keepVisible?: boolean
+    /**
+     * If set, the element is always kept visible within the root element's rect.
+     */
+    keepVisible?: boolean
 
-  /**
-   * How precise the translate3d() values should be.
-   *
-   * A value of 1 (default) means the only whole pixels are applied (e.g. 20px).
-   * A value of 0.5 means the values are rounded to the next 0.5 increment (e.g. 20.5px or 21px).
-   * A value of 10 would round to 20px, 30px, 0px, etc.
-   *
-   * Note that internally the offset is kept as a floating point number. The
-   * precision only defines how the number is rounded when setting the transform style.
-   */
-  precision?: number
+    /**
+     * How precise the translate3d() values should be.
+     *
+     * A value of 1 (default) means the only whole pixels are applied (e.g. 20px).
+     * A value of 0.5 means the values are rounded to the next 0.5 increment (e.g. 20.5px or 21px).
+     * A value of 10 would round to 20px, 30px, 0px, etc.
+     *
+     * Note that internally the offset is kept as a floating point number. The
+     * precision only defines how the number is rounded when setting the transform style.
+     */
+    precision?: number
 
-  /**
-   * Whether to restore the original styles after destroying the plugin instance.
-   */
-  restoreStyles?: boolean
-}>(function (artboard, options) {
-  const el = options.getRequired('element')
-  const style = inlineStyleOverrider(el)
+    /**
+     * Whether to restore the original styles after destroying the plugin instance.
+     */
+    restoreStyles?: boolean
+  },
+  {
+    /**
+     * Returns the coordinates of the sticky target.
+     */
+    getCoords: () => Coord
+  }
+>(function (artboard, options) {
+  const target = options.getRequired('target')
+  const style =
+    target instanceof HTMLElement ? inlineStyleOverrider(target) : null
 
-  let elWidth = el.offsetWidth
-  let elHeight = el.offsetHeight
+  const size: Size =
+    target instanceof HTMLElement
+      ? { width: target.offsetWidth, height: target.offsetHeight }
+      : target()
 
   function onSizeChange(entry: ResizeObserverEntry) {
-    if (entry.target !== el) return
-    const size = entry.borderBoxSize?.[0]
-    if (!size) return
+    if (entry.target !== target) return
+    const newSize = entry.borderBoxSize?.[0]
+    if (!newSize) return
 
-    elWidth = size.inlineSize
-    elHeight = size.blockSize
+    size.width = newSize.inlineSize
+    size.height = newSize.blockSize
   }
 
   /**
@@ -170,48 +183,71 @@ export const sticky = defineArtboardPlugin<{
         : computed.value.position.y * ctx.scale
 
     x +=
-      ctx.offset.x + computed.value.xMargin - elWidth * computed.value.origin.x
+      ctx.offset.x +
+      computed.value.xMargin -
+      size.width * computed.value.origin.x
     y +=
-      ctx.offset.y + computed.value.yMargin - elHeight * computed.value.origin.y
+      ctx.offset.y +
+      computed.value.yMargin -
+      size.height * computed.value.origin.y
 
     // If keepVisible is set, make sure the element always stays visible inside
     // the root element's rect.
     if (keepVisible) {
       x = Math.min(
         Math.max(x, computed.value.margin.left),
-        ctx.rootSize.width - elWidth - computed.value.margin.right,
+        ctx.rootSize.width - size.width - computed.value.margin.right,
       )
       y = Math.min(
         Math.max(y, computed.value.margin.top),
-        ctx.rootSize.height - elHeight - computed.value.margin.bottom,
+        ctx.rootSize.height - size.height - computed.value.margin.bottom,
       )
     }
 
     const precision = options.get('precision', 0.5)
-    style.setTransform(withPrecision(x, precision), withPrecision(y, precision))
-    style.set('transformOrigin', computed.value.transformOrigin)
+    if (style) {
+      style.setTransform(
+        withPrecision(x, precision),
+        withPrecision(y, precision),
+      )
+      style.set('transformOrigin', computed.value.transformOrigin)
+    }
   }
 
-  artboard.observeSize(el)
+  if (target instanceof HTMLElement) {
+    artboard.observeSize(target)
+  }
 
   function destroy() {
-    artboard.unobserveSize(el)
-    if (options.should('restoreStyles')) {
+    if (target instanceof HTMLElement) {
+      artboard.unobserveSize(target)
+    }
+    if (options.should('restoreStyles') && style) {
       style.restore()
     }
   }
 
-  style.setMultiple({
-    position: 'absolute',
-    top: '0',
-    left: '0',
-    right: 'auto',
-    bottom: 'auto',
-  })
+  if (style) {
+    style.setMultiple({
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      right: 'auto',
+      bottom: 'auto',
+    })
+  }
+
+  function getCoords() {
+    return {
+      x: 0,
+      y: 0,
+    }
+  }
 
   return {
     destroy,
     loop,
     onSizeChange,
+    getCoords,
   }
 })

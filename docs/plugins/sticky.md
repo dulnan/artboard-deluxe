@@ -35,7 +35,7 @@ const artboard = createArtboard(document.getElementById('root'), [
   raf(),
   mouse(),
   sticky({
-    element: document.getElementById('overlay'),
+    target: document.getElementById('overlay'),
   }),
 ])
 ```
