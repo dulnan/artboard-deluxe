@@ -30,7 +30,7 @@ export type VelocityQueueOptions = {
   multiplicator: number
 }
 
-export function createQueue<T>() {
+function createQueue<T>() {
   const queue: T[] = []
   const timeQueue: number[] = []
 
@@ -52,7 +52,7 @@ export function createQueue<T>() {
   }
 }
 
-export type DirectionQueueOptions = {
+type DirectionQueueOptions = {
   threshold: number
 }
 

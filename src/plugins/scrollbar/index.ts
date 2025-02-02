@@ -2,7 +2,7 @@ import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import type { ArtboardLoopContext } from '../../types'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 
-export type ScrollbarOrientation = 'x' | 'y'
+type ScrollbarOrientation = 'x' | 'y'
 
 export const scrollbar = defineArtboardPlugin<{
   /** The element representing the scrollbar. */
