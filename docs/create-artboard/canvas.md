@@ -73,7 +73,7 @@ You may also implement your drawing logic as a plugin.
 ```typescript [plugin.ts]
 import { defineArtboardPlugin } from 'artboard-deluxe'
 
-export const draw = defineArtboardPlugin(function (artboard) {
+export const draw = defineArtboardPlugin(function (artboard, options) {
   const rootElement = artboard.getRootElement()
   if (!(rootElement instanceof HTMLCanvasElement)) {
     throw new Error('Plugin can only be used with canvas rendering.')
@@ -84,6 +84,7 @@ export const draw = defineArtboardPlugin(function (artboard) {
     throw new Error('Failed to get 2D canvas context.')
   }
   return {
+    options,
     // Method called in a requestAnimationFrame callback.
     loop(loopContext) {
       if (!loopContext.artboardSize) {

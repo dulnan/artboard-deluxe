@@ -1,6 +1,6 @@
 # sticky()
 
-Makes an element stick to the artboard at a given position.
+Makes an element or area stick to the artboard at a given position.
 
 ## Usage
 
@@ -40,7 +40,7 @@ const artboard = createArtboard(document.getElementById('root'), [
 ])
 ```
 
-### Example with `<canvas>`
+### Example with sticky DOM element and `<canvas>`
 
 <CodePen id="GgKMMvv" />
 
@@ -54,6 +54,89 @@ can wrap both the canvas and the sticky element in another element that has
   <div id="overlay">Hello World</div>
 </div>
 ```
+
+## Without DOM element
+
+You can also create a "virtual" sticky "element" without an actual DOM element.
+For this, instead of passing a HTMLElement as the `target` you can provide an
+object with `width` and `height` properties. The plugin will calculate the
+correct x and y coordinates for you. You can access them with the `getRect()`
+method on your plugin instance.
+
+In this example the sticky "element" is drawn on top using 2D canvas:
+
+```typescript
+import {
+  createArtboard,
+  raf,
+  sticky,
+  mouse,
+  dom,
+  type PluginSticky,
+} from 'artboard-deluxe'
+
+const canvas = document.getElementById('canvas')
+const artboard = createArtboard(canvas, [mouse()])
+
+// Typing plugin is optional since the type is also automatically inferred.
+const plugin: PluginSticky = artboard.addPlugin(
+  sticky({
+    target: { width: 100, height: 40 },
+  }),
+)
+
+function loop(time: number) {
+  const { offset, scale, artboardSize } = artboard.loop(time)
+  const ctx = canvas.getContext('2d')
+
+  // Clear canvas.
+  ctx.clearRect(0, 0, 1280, 768)
+
+  // Draw a grey background.
+  ctx.fillStyle = 'grey'
+  ctx.fillRect(0, 0, 1280, 768)
+
+  // Draw the artboard.
+  ctx.fillStyle = 'white'
+  ctx.fillRect(
+    offset.x,
+    offset.y,
+    Math.round(artboardSize!.width * scale),
+    Math.round(artboardSize!.height * scale),
+  )
+
+  // Get the coordinates for the sticky element.
+  const { x, y, width, height } = plugin.getRect()
+
+  // Draw a rectangle for the sticky element.
+  ctx.fillStyle = 'red'
+  ctx.fillRect(x, y, width, height)
+
+  window.requestAnimationFrame(loop)
+}
+
+loop()
+```
+
+You can also update the size after the plugin has been initialised:
+
+```typescript
+const plugin = artboard.addPlugin(
+  sticky({
+    target: { width: 100, height: 40 },
+  }),
+)
+
+plugin.options.set('target', { width: 40, height: 20 })
+```
+
+::: info
+
+Note that the coordinates are only updated with the next animation loop, so
+calling `plugin.getRect()` immediately afterwards will likely not return the
+updated coordinates.
+
+:::
 
 ## Positioning
 

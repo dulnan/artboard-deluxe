@@ -668,11 +668,9 @@ function initArtboard() {
 
   stickyPlugin = artboard.addPlugin(
     sticky({
-      target: () => {
-        return {
-          width: 179,
-          height: 40,
-        }
+      target: {
+        width: 179,
+        height: 40,
       },
       origin: 'bottom-left',
       margin: 0,

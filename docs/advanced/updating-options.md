@@ -16,11 +16,12 @@ import { createArtboard, wheel } from 'artboard-deluxe'
 
 const artboard = createArtboard(document.getElementById('root'))
 
-const wheelPlugin = wheel({
-  useMomentumScroll: true,
-  useMomentumZoom: true,
-})
-artboard.addPlugin(mousePlugin)
+const wheelPlugin = artboard.addPlugin(
+  wheel({
+    useMomentumScroll: true,
+    useMomentumZoom: true,
+  }),
+)
 
 function toggleMomentum() {
   // Toggle between momentum options.
@@ -55,8 +56,7 @@ function getOptions(): PluginWheelOptions {
   }
 }
 
-const wheelPlugin = wheel(getOptions())
-artboard.addPlugin(mousePlugin)
+const wheelPlugin = artboard.addPlugin(wheel(getOptions()))
 
 function updateOptions() {
   wheelPlugin.options.setAll(getOptions())
