@@ -171,6 +171,20 @@ const artboard = createArtboard(document.body, [
 ])
 ```
 
+## Helpers
+
+### ResizeObserver
+
+If your plugin needs to react to changes of an element's size, you can register
+a callback that is executed when the size changes:
+
+```typescript
+artboard.observeSizeChange(element, (entry) => {
+  // The ResizeObserverEntry from the ResizeObserver.
+  console.log(entry)
+})
+```
+
 ## Built-in Methods
 
 Your plugin may return the following methods:
@@ -185,27 +199,6 @@ animation frame. This is where you can update the DOM.
 
 Called when the plugin is destroyed. Allows you to remove event listeners or
 clean up the DOM.
-
-### onSizeChange()
-
-Called when the size of an element is changed according to `ResizeObserver`. To
-observe an element's size, you can do:
-
-```typescript
-artboard.observeSize(element)
-```
-
-And in your onSizeChange method:
-
-```typescript
-function onSizeChange(entry: ResizeObserverEntry) {
-  if (entry.target !== element) {
-    return
-  }
-
-  // Do something.
-}
-```
 
 ## Types
 

@@ -38,19 +38,15 @@ export const scrollbar = defineArtboardPlugin<{
   let scrollThumbSize = 0
   let scrollSize = 0
 
-  function onSizeChange(entry: ResizeObserverEntry) {
-    if (entry.target !== elScrollbar) {
-      return
-    }
-
-    const size = entry?.contentBoxSize?.[0]
+  const { unobserve } = artboard.observeSizeChange(elScrollbar, (entry) => {
+    const size = entry.contentBoxSize?.[0]
     if (!size) {
       return
     }
     const orientation = options.get('orientation')
 
     scrollbarSize = orientation === 'y' ? size.blockSize : size.inlineSize
-  }
+  })
 
   function onClickScrollbar(e: MouseEvent) {
     e.stopPropagation()
@@ -186,14 +182,13 @@ export const scrollbar = defineArtboardPlugin<{
     applyStyles()
   }
 
-  artboard.observeSize(elScrollbar)
   elButton.addEventListener('pointerdown', onThumbMouseDown, {
     capture: true,
   })
   elScrollbar.addEventListener('pointerdown', onClickScrollbar)
 
   function destroy() {
-    artboard.unobserveSize(elScrollbar)
+    unobserve()
     elButton.removeEventListener('pointerdown', onThumbMouseDown, {
       capture: true,
     })
@@ -221,6 +216,5 @@ export const scrollbar = defineArtboardPlugin<{
     options,
     destroy,
     loop,
-    onSizeChange,
   }
 })
