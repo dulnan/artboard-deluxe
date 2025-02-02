@@ -436,9 +436,9 @@ export type Artboard = {
    */
   addPlugin<T extends ArtboardPluginDefinition>(
     plugin: T,
-  ): T extends ArtboardPluginDefinition<never, infer R>
+  ): T extends ArtboardPluginDefinition<any, infer R>
     ? ArtboardPlugin<R>
-    : ArtboardPlugin
+    : never
 
   /**
    * Removes a previously added plugin.

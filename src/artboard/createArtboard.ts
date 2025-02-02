@@ -1005,10 +1005,15 @@ export function createArtboard(
     getScaleTarget,
   }
 
-  function addPlugin(plugin: ArtboardPluginDefinition): ArtboardPlugin {
+  function addPlugin<
+    T extends ArtboardPluginDefinition,
+    ReturnType = T extends ArtboardPluginDefinition<any, infer R>
+      ? ArtboardPlugin<R>
+      : never,
+  >(plugin: T): ReturnType {
     const pluginInstance = plugin.init(artboard, plugin.options)
     plugins.push(pluginInstance)
-    return pluginInstance
+    return pluginInstance as ReturnType
   }
 
   function removePlugin(plugin: ArtboardPlugin) {

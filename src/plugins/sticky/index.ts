@@ -1,7 +1,7 @@
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
 import type { ArtboardLoopContext } from '../../types'
-import type { Coord, Edge, Origin, Size } from '../../types/geometry'
+import type { Coord, Edge, Origin, Rectangle, Size } from '../../types/geometry'
 import { withPrecision, parseOrigin, parseEdges } from '../../helpers'
 
 type Margin = number | Partial<Edge>
@@ -95,9 +95,9 @@ export const sticky = defineArtboardPlugin<
   },
   {
     /**
-     * Returns the coordinates of the sticky target.
+     * Returns the rectangle of the sticky target.
      */
-    getCoords: () => Coord
+    getRect: () => Rectangle
   }
 >(function (artboard, options) {
   const target = options.getRequired('target')
@@ -108,6 +108,8 @@ export const sticky = defineArtboardPlugin<
     target instanceof HTMLElement
       ? { width: target.offsetWidth, height: target.offsetHeight }
       : target()
+
+  const coords: Coord = { x: 0, y: 0 }
 
   function onSizeChange(entry: ResizeObserverEntry) {
     if (entry.target !== target) return
@@ -205,11 +207,11 @@ export const sticky = defineArtboardPlugin<
     }
 
     const precision = options.get('precision', 0.5)
+    coords.x = withPrecision(x, precision)
+    coords.y = withPrecision(y, precision)
+
     if (style) {
-      style.setTransform(
-        withPrecision(x, precision),
-        withPrecision(y, precision),
-      )
+      style.setTransform(coords.x, coords.y)
       style.set('transformOrigin', computed.value.transformOrigin)
     }
   }
@@ -237,10 +239,10 @@ export const sticky = defineArtboardPlugin<
     })
   }
 
-  function getCoords() {
+  function getRect(): Rectangle {
     return {
-      x: 0,
-      y: 0,
+      ...size,
+      ...coords,
     }
   }
 
@@ -248,6 +250,6 @@ export const sticky = defineArtboardPlugin<
     destroy,
     loop,
     onSizeChange,
-    getCoords,
+    getRect,
   }
 })
