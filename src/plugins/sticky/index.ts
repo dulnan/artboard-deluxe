@@ -21,8 +21,6 @@ type ComputedOptions = {
   transformOrigin: string
 }
 
-type TargetVirtual = () => Size
-
 /**
  * Anchors an element relative to the artboard with a given `position`,
  * then shifts the element so its `origin` is at that position and
@@ -31,9 +29,17 @@ type TargetVirtual = () => Size
 export const sticky = defineArtboardPlugin<
   {
     /**
-     * The target to make sticky.
+     * Either a DOM element to make sticky or an object with width and height
+     * properties.
+     *
+     * If an element is provided the plugin will automatially update the style
+     * of the element.
+     *
+     * If an object is provided, the plugin will calculate the x and y
+     * coordinates based on the provided size. You can obtain these coordinates
+     * by calling getRect() on the plugin instance.
      */
-    target: HTMLElement | TargetVirtual
+    target: HTMLElement | Size
 
     /**
      * Whether the position styles should be applied.
@@ -107,7 +113,7 @@ export const sticky = defineArtboardPlugin<
   const size: Size =
     target instanceof HTMLElement
       ? { width: target.offsetWidth, height: target.offsetHeight }
-      : target()
+      : target
 
   const coords: Coord = { x: 0, y: 0 }
 
@@ -167,6 +173,13 @@ export const sticky = defineArtboardPlugin<
     // Return if plugin is disabled.
     if (!options.should('enabled', true)) {
       return
+    }
+
+    // Update the size if no HTML element is provided as target.
+    if (!(target instanceof HTMLElement)) {
+      const newSize = options.get('target') as Size
+      size.width = newSize.width
+      size.height = newSize.height
     }
 
     const artboardWidth = (ctx.artboardSize?.width || 0) * ctx.scale
