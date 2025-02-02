@@ -3,7 +3,7 @@ import { defineArtboardPlugin } from '../defineArtboardPlugin'
 /**
  * Registers a requestAnimationFrame callback for the artboard.
  */
-export const raf = defineArtboardPlugin(function (artboard) {
+export const raf = defineArtboardPlugin(function (artboard, options) {
   let rafId: number | null = null
 
   function loop(currentTime: number) {
@@ -20,6 +20,7 @@ export const raf = defineArtboardPlugin(function (artboard) {
   rafId = window.requestAnimationFrame(loop)
 
   return {
+    options,
     destroy,
   }
 })

@@ -112,6 +112,7 @@ export const cssProperties = defineArtboardPlugin<{
   }
 
   return {
+    options,
     destroy,
     loop,
   }

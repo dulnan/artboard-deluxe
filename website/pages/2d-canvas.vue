@@ -58,7 +58,7 @@ import OverviewComponent from './../components/Overview/index.vue'
 import {
   type Rectangle,
   type Artboard,
-  type PluginStickyInstance,
+  type PluginSticky,
   keyboard,
   scrollbar,
   overview,
@@ -175,7 +175,7 @@ const drawnBounds = {
 const brushSize = 40
 
 let artboard: Artboard | null = null
-let stickyPlugin: PluginStickyInstance | null = null
+let stickyPlugin: PluginSticky | null = null
 let raf: null | number = null
 
 let mouseXRelative = 0

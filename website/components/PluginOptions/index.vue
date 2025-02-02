@@ -44,9 +44,9 @@ import type { Artboard, ArtboardPluginDefinition } from '../../../src/types'
 const props = defineProps<{
   name: string
   plugin:
-    | ArtboardPluginDefinition
+    | ArtboardPluginDefinition<any, any>
     | null
-    | Array<ArtboardPluginDefinition | null>
+    | Array<ArtboardPluginDefinition<any, any> | null>
     | Artboard
   options: PluginOption[]
   open?: boolean

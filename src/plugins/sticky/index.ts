@@ -247,6 +247,7 @@ export const sticky = defineArtboardPlugin<
   }
 
   return {
+    options,
     destroy,
     loop,
     onSizeChange,

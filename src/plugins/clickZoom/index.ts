@@ -91,6 +91,7 @@ export const clickZoom = defineArtboardPlugin<{
   rootEl.addEventListener('pointerup', onPointerUp)
 
   return {
+    options,
     destroy,
   }
 })

@@ -2,8 +2,18 @@ import type { Options } from '../artboard/options'
 import type { AnimationOptions, ArtboardAnimation } from '../helpers/animation'
 import type { Boundaries, Coord, Edge, Rectangle, Size } from './geometry'
 
+// Extract the plugin options.
 export type PluginOptions<T> =
-  T extends ArtboardPluginDefinition<infer O> ? O : never
+  T extends ArtboardPluginDefinition<infer O, any> ? O : never
+
+// Infer a fully initialised plugin instance.
+export type PluginInstance<T> =
+  T extends ArtboardPluginDefinition<
+    infer O extends object,
+    infer R extends object
+  >
+    ? ArtboardPluginInstance<O, R>
+    : never
 
 /**
  * Defines possible scroll directions.
@@ -17,7 +27,17 @@ export type Direction = 'horizontal' | 'vertical' | 'both' | 'none'
  */
 export type PossibleBlockingRect = Rectangle | [number, number, number, number]
 
-export type ArtboardPlugin<T = unknown> = {
+/**
+ * A fully initialised plugin instance.
+ */
+export type ArtboardPluginInstance<
+  O extends object = object,
+  R extends object = object,
+> = {
+  /**
+   * The options helper.
+   */
+  options: ArtboardPluginOptions<O>
   /**
    * Remove event listeners and clean up.
    */
@@ -34,7 +54,7 @@ export type ArtboardPlugin<T = unknown> = {
    * Receives the state of the artboard at the time of the animation loop as an argument.
    */
   loop?: (ctx: ArtboardLoopContext) => void
-} & T
+} & R
 
 export type ArtboardPluginOptions<T extends object> = {
   /**
@@ -86,10 +106,10 @@ export type ArtboardPluginOptions<T extends object> = {
   computed<R>(callback: (options: T) => R): { value: R }
 }
 
-export type ArtboardPluginInit<T extends object, R extends object = object> = (
+export type ArtboardPluginInit<O extends object, R extends object = object> = (
   artboard: Artboard,
-  options: ArtboardPluginOptions<T>,
-) => ArtboardPlugin<R>
+  options: ArtboardPluginOptions<O>,
+) => ArtboardPluginInstance<O, R>
 
 /**
  * Defines a plugin definition.
@@ -97,11 +117,7 @@ export type ArtboardPluginInit<T extends object, R extends object = object> = (
  * This is the return value when you create a plugin, e.g. using `mouse()`.
  * The plugin definition can then be passed as the second argument in an array to `createArtboard` or by manually adding the plugin after the artboard has been initialised using `artboard.addPlugin()`.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ArtboardPluginDefinition<
-  T extends object = any,
-  R extends object = object,
-> = {
+export type ArtboardPluginDefinition<T extends object, R extends object> = {
   /**
    * The options instance.
    */
@@ -434,10 +450,10 @@ export type Artboard = {
    *
    * @param plugin - The plugin to add.
    */
-  addPlugin<T extends ArtboardPluginDefinition>(
+  addPlugin<T extends ArtboardPluginDefinition<any, any>>(
     plugin: T,
-  ): T extends ArtboardPluginDefinition<any, infer R>
-    ? ArtboardPlugin<R>
+  ): T extends ArtboardPluginDefinition<infer O, infer R>
+    ? ArtboardPluginInstance<O, R>
     : never
 
   /**
@@ -458,7 +474,7 @@ export type Artboard = {
    *
    * @param plugin - The plugin to remove. Must be the same instance that has been added using addPlugin.
    */
-  removePlugin(plugin: ArtboardPlugin): void
+  removePlugin(plugin: ArtboardPluginInstance): void
 
   /**
    * Get the current applied scale of the artboard.

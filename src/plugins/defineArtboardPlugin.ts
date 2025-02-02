@@ -107,18 +107,21 @@ function pluginOptions<T extends object>(
 }
 
 export function defineArtboardPlugin<
-  T extends object,
+  // The type of the options.
+  O extends object,
+  // The type for additional public plugin methods or properties returned.
   R extends object = object,
-  V = object extends T ? true : false,
+  // Whether there is at least one required option.
+  HasOptions = object extends O ? true : false,
 >(
-  init: ArtboardPluginInit<T, R>,
-): V extends true
+  init: ArtboardPluginInit<O, R>,
+): HasOptions extends true
   ? // No option properties are required.
-    (options?: T) => ArtboardPluginDefinition<T, R>
+    (options?: O) => ArtboardPluginDefinition<O, R>
   : // Some option properties are required, thus an object argument is required.
-    (options: T) => ArtboardPluginDefinition<T, R> {
-  return function (providedOptions?: T) {
-    const options = pluginOptions(providedOptions as T)
+    (options: O) => ArtboardPluginDefinition<O, R> {
+  return function (providedOptions?: O) {
+    const options = pluginOptions(providedOptions as O)
     return {
       options,
       init,

@@ -51,7 +51,9 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "typecheck": "tsc"
+    "typecheck": "npm run typecheck:library && npm run typecheck:nuxt",
+    "typecheck:library": "tsc",
+    "typecheck:nuxt": "npx nuxi typecheck website"
   },
   "author": "Jan Hug <me@dulnan.net>",
   "license": "MIT",

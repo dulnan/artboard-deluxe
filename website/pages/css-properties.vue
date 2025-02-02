@@ -96,6 +96,15 @@ onMounted(() => {
       cssProperties({
         unitless: true,
         precision: 1,
+        properties: [
+          '--artboard-offset-x',
+          '--artboard-offset-y',
+          '--artboard-scale',
+          '--artboard-size-width',
+          '--artboard-size-height',
+          '--artboard-root-width',
+          '--artboard-root-height',
+        ],
       }),
     ],
     {

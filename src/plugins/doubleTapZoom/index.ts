@@ -66,6 +66,7 @@ export const doubleTapZoom = defineArtboardPlugin<{
   rootEl.addEventListener('touchstart', onTouchStart)
 
   return {
+    options,
     destroy,
   }
 })

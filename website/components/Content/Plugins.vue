@@ -160,8 +160,9 @@ const plugins: Plugin[] = [
 ].map((plugin, index) => {
   return {
     ...plugin,
+    icon: plugin.icon as NuxtSvgSpriteSymbol,
     isPrimary: index % 2 === 0,
-  }
+  } as Plugin
 })
 
 const activePluginId = useState('activePluginId', () => plugins[0].name)
