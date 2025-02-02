@@ -61,3 +61,7 @@ const artboard = createArtboard(document.getElementById('root'), [
   raf(),
 ])
 ```
+
+## Options
+
+[See all options](/api/functions/scrollbar.html#parameters)

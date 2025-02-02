@@ -19,6 +19,8 @@ const artboard = createArtboard(document.getElementById('root'), [
 
 ## Options
 
+[See all options](/api/functions/clickZoom.html#parameters)
+
 ### animation
 
 You can override the default animation between zoom levels using the `animation`

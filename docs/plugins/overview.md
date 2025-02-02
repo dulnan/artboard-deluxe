@@ -86,3 +86,7 @@ If you want to "grey out" the non-visible portion, you can wrap the
   background: white;
 }
 ```
+
+## Options
+
+[See all options](/api/functions/overview.html#parameters)

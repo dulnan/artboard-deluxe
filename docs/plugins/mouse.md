@@ -17,6 +17,8 @@ const artboard = createArtboard(document.getElementById('root'), [
 
 ## Options
 
+[See all options](/api/functions/mouse.html#parameters)
+
 ### useSpacebar
 
 By default the artboard is draggable by clicking and dragging. You can instead

@@ -32,6 +32,8 @@ this case.
 
 ## Options
 
+[See all options](/api/functions/wheel.html#parameters)
+
 ### scrollSpeed
 
 A multiplicator for determining the final scroll speed. A value of 1 results in

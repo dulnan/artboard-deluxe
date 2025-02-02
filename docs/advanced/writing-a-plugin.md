@@ -8,12 +8,72 @@ behaviour.
 Use the `defineArtboardPlugin` method to define your plugin. If requires a
 single argument which is a function that should return the plugin.
 
-The returned plugin should implement a `destroy()` method which is called when
-the plugin is destroyed.
+The returned plugin may return a `destroy()` method which is called when the
+plugin instance is destroyed.
 
-You may define the type for the plugin options as a generic argument. The
-options are wrapped in a helper instance and can be accessed using
+## Plugin Options
+
+You may define the type for the plugin options as the first generic argument.
+The options are wrapped in a helper instance and can be accessed using
 `options.get()`.
+[See all available methods](/api/type-aliases/ArtboardPluginOptions.html#type-declaration)
+
+The plugin must return the options so they're available in the plugin instance.
+
+```typescript
+import { defineArtboardPlugin } from 'artboard-deluxe'
+
+export const myPlugin = defineArtboardPlugin<{
+  requiredOption: string
+  optional?: number
+}>(function (artboard, options) {
+  // Get a required option. If not provided an error is thrown.
+  const requiredOption = options.getRequired('requiredOption')
+
+  // Get an optional option, with a default value as the second argument.
+  const options = options.get('optional', 10)
+
+  return {
+    options,
+  }
+})
+```
+
+## Custom Methods
+
+Your plugin may also return additional methods that can be called on the plugin
+instance. Define the methods as the second generic type argument.
+
+```typescript
+import { defineArtboardPlugin } from 'artboard-deluxe'
+
+export const myPlugin = defineArtboardPlugin<
+  {
+    text: string
+  },
+  {
+    getText: () => string
+  }
+>(function (artboard, options) {
+  return {
+    options,
+    getText() {
+      return 'Your text: ' + options.getRequired('text')
+    },
+  }
+})
+```
+
+And later on, when the plugin is initialised:
+
+```typescript
+import { createArtboard } from 'artboard-deluxe'
+import { myPlugin } from './myPlugin'
+
+const artboard = createArtboard()
+const instance = artboard.addPlugin(myPlugin({ text: 'Hello World' }))
+console.log(instance.getText())
+```
 
 ## Example
 
@@ -24,10 +84,15 @@ provided HTML element.
 ```typescript
 import { defineArtboardPlugin, inlineStyleOverrider } from 'artboard-deluxe'
 
-export const zoomOverlay = defineArtboardPlugin<{
-  element: HTMLElement
-  fontSize?: number
-}>(function (artboard, options) {
+export const zoomOverlay = defineArtboardPlugin<
+  {
+    element: HTMLElement
+    fontSize?: number
+  },
+  {
+    setOpacity: (opacity: number) => void
+  }
+>(function (artboard, options) {
   // Get a required option. This will throw an error if the option is not defined.
   const element = options.getRequired('element')
 
@@ -51,9 +116,16 @@ export const zoomOverlay = defineArtboardPlugin<{
 
   let prevZoom = 0
 
+  function setOpacity(opacity: number) {
+    style.set('opacity', opacity)
+  }
+
   return {
     // Return the options helper.
     options,
+
+    // Return method declared in the second generic type argument.
+    setOpacity,
 
     // Restore the original styles that may have been overriden.
     destroy() {
@@ -99,7 +171,7 @@ const artboard = createArtboard(document.body, [
 ])
 ```
 
-## Plugin methods
+## Built-in Methods
 
 Your plugin may return the following methods:
 
@@ -107,7 +179,7 @@ Your plugin may return the following methods:
 
 Called in a requestAnimationFrame callback. The method receives a single
 argument `ctx` that contains the state of the artboard at the time of the
-animation frame.
+animation frame. This is where you can update the DOM.
 
 ### destroy()
 
@@ -158,7 +230,7 @@ const myPlugin = defineArtboardPlugin<{ myOption: string }>(
 type MyPluginOptions = PluginOptions<ReturnType<typeof myPlugin>>
 ```
 
-## PluginInstance
+### PluginInstance
 
 The type for a fully initialised plugin instance.
 

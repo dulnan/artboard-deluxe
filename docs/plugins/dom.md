@@ -26,6 +26,8 @@ const artboard = createArtboard(document.getElementById('root'), [
 
 ## Options
 
+[See all options](/api/functions/dom.html#parameters)
+
 ### element
 
 The element that represents the artboard.

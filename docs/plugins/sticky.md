@@ -57,6 +57,8 @@ can wrap both the canvas and the sticky element in another element that has
 
 ## Without DOM element
 
+<CodePen id="EaYJQOL" />
+
 You can also create a "virtual" sticky "element" without an actual DOM element.
 For this, instead of passing a HTMLElement as the `target` you can provide an
 object with `width` and `height` properties. The plugin will calculate the

@@ -36,6 +36,8 @@ valid scale.
 
 ## Options
 
+[See all options](/api/functions/touch.html#parameters)
+
 ### useTwoTouchScrolling
 
 By default the artboard is draggable when using a single touch point. If you

@@ -27,5 +27,6 @@ const src = computed(() => {
 .codepen-iframe {
   width: 100%;
   aspect-ratio: 1;
+  margin: 20px 0;
 }
 </style>

@@ -53,7 +53,7 @@ export const sticky = defineArtboardPlugin<
      * Can be one of the named posistions (such as 'top-left') or an object
      * with x and y coordinates.
      *
-     * Defaults to 'north-west'.
+     * Defaults to 'top-left'.
      */
     position?:
       | Origin

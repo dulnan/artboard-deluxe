@@ -76,3 +76,7 @@ keyboard({
   },
 })
 ```
+
+## Options
+
+[See all options](/api/functions/keyboard.html#parameters)
