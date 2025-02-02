@@ -245,7 +245,7 @@ export function withDefault(
     return defaultValue
   }
 
-  return v
+  return Number.isNaN(v) ? defaultValue : v
 }
 
 /**
@@ -277,4 +277,25 @@ export function parseEdges(v?: Partial<Edge> | number, defaultValue = 0): Edge {
     bottom: withDefault(v.bottom, defaultValue),
     left: withDefault(v.left, defaultValue),
   }
+}
+
+export function asValidNumber(
+  value?: number | null | string,
+  defaultValue = 0,
+): number {
+  // No value provided.
+  if (value === null || value === undefined) {
+    return defaultValue
+  }
+
+  // Try to parse the string to a number and call the method again.
+  if (typeof value === 'string') {
+    return asValidNumber(parseFloat(value))
+  }
+
+  if (Number.isNaN(value)) {
+    return defaultValue
+  }
+
+  return value
 }

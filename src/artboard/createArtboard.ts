@@ -1,4 +1,5 @@
 import {
+  asValidNumber,
   calculateCenterPosition,
   clamp,
   dampenRelative,
@@ -63,15 +64,15 @@ export function createArtboard(
     lastAnimateToTimestamp: 0,
     lastLoopTimestamp: 0,
     offset: {
-      x: initOptions?.initTransform?.x || 0,
-      y: initOptions?.initTransform?.y || 0,
+      x: asValidNumber(initOptions?.initTransform?.x, 0),
+      y: asValidNumber(initOptions?.initTransform?.y, 0),
     },
     rootRect: providedRootEl.getBoundingClientRect(),
     rootSize: {
       width: providedRootEl.offsetWidth,
       height: providedRootEl.offsetHeight,
     },
-    scale: initOptions?.initTransform?.scale || 1,
+    scale: asValidNumber(initOptions?.initTransform?.scale, 1),
     touchDirection: 'none',
     momentum: null,
     momentumStopTimestamp: 0,
