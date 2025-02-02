@@ -1,16 +1,16 @@
 <template>
   <div class="error-page font-ms">
     <div class="p-[30px]">
-      <div class="flex gap-[24px]">
+      <div class="flex gap-24">
         <div class="shrink-0">
           <img src="~/assets/info.png" width="48" />
         </div>
         <h1 class="text-[32px] leading-[40px]">{{ title }}</h1>
       </div>
 
-      <div class="text-[22px] leading-[30px] max-w-[768px] tracking-[3px]">
-        <p v-if="text" class="mt-[40px]">{{ text }}</p>
-        <hr class="bg-silver h-[5px] mt-[32px]" />
+      <div class="text-[22px] leading-[30px] max-w-screen-md tracking-[3px]">
+        <p v-if="text" class="mt-40">{{ text }}</p>
+        <hr class="bg-silver h-[5px] mt-32" />
 
         <template v-if="error.statusCode === 404">
           <p class="mt-[56px]">Please try the following:</p>

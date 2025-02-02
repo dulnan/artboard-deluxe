@@ -43,7 +43,7 @@
     >
       <canvas
         ref="overviewCanvas"
-        class="image-pixelated"
+        class="image-pixelated absolute top-0 left-0 size-full"
         :width="overviewWidth.value"
         :height="overviewHeight.value"
       />
