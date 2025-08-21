@@ -1,9 +1,6 @@
 import { isMac } from '../../helpers/userAgent'
-import type { Coord } from '../../types/geometry'
+import { WheelNormalizer } from '../../helpers/wheel'
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
-
-// Reasonable defaults
-const MAX_ZOOM_STEP = 10
 
 export const wheel = defineArtboardPlugin<{
   /** The scroll speed when using the mouse wheel. */
@@ -38,37 +35,16 @@ export const wheel = defineArtboardPlugin<{
 }>(function (artboard, options) {
   const rootEl = artboard.getRootElement()
   const IS_MAC = isMac()
-
-  // Adapted from https://stackoverflow.com/a/13650579
-  /** @internal */
-  function getDelta(event: WheelEvent): Coord & { z: number } {
-    let { deltaY, deltaX } = event
-    let deltaZ = 0
-
-    // wheeling
-    if (event.ctrlKey || event.altKey || event.metaKey) {
-      deltaZ =
-        (Math.abs(deltaY) > MAX_ZOOM_STEP
-          ? MAX_ZOOM_STEP * Math.sign(deltaY)
-          : deltaY) / 100
-    } else {
-      if (event.shiftKey && !IS_MAC) {
-        deltaX = deltaY
-        deltaY = 0
-      }
-    }
-
-    return { x: deltaX, y: deltaY, z: -deltaZ }
-  }
+  const normalizer = new WheelNormalizer()
 
   function onWheelRootElement(e: WheelEvent) {
-    const delta = getDelta(e)
+    const data = normalizer.onWheel(e)
     if (e.ctrlKey || e.metaKey) {
       artboard.cancelAnimation()
       e.preventDefault()
       e.stopPropagation()
 
-      doZoom(e.pageX, e.pageY, delta.z)
+      doZoom(e.pageX, e.pageY, data.z)
       return
     }
     const scrollSpeed = options.get('scrollSpeed', 1)
@@ -78,12 +54,12 @@ export const wheel = defineArtboardPlugin<{
 
     const useMomentumScroll = options.should('useMomentumScroll')
 
-    if (useMomentumScroll && !IS_MAC) {
+    if (useMomentumScroll && !IS_MAC && data.direction !== 'both') {
       const velocity = artboard.getMomentum() || { x: 0, y: 0 }
       artboard.setInteraction('momentum')
       artboard.setMomentum(
-        velocity.x - delta.x * scrollSpeed * 9.6,
-        velocity.y - delta.y * scrollSpeed * 9.6,
+        velocity.x - data.x * scrollSpeed * 9.6,
+        velocity.y - data.y * scrollSpeed * 9.6,
         0.9,
       )
     } else {
@@ -91,8 +67,8 @@ export const wheel = defineArtboardPlugin<{
       artboard.cancelAnimation()
       artboard.setInteraction('none')
       artboard.setOffset(
-        offset.x + -(delta.x * scrollSpeed),
-        offset.y + -(delta.y * scrollSpeed),
+        offset.x + -(data.x * scrollSpeed),
+        offset.y + -(data.y * scrollSpeed),
         !useMomentumScroll,
       )
     }
