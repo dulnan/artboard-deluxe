@@ -71,8 +71,7 @@ import {
 import type DrawCanvas from './../components/DrawCanvas.vue'
 import ScrollbarComponent from './../components/Scrollbar/index.vue'
 import OverviewComponent from './../components/Overview/index.vue'
-import { useMouse } from '@vueuse/core/index.cjs'
-import { notNullish } from '@vueuse/core'
+import { notNullish, useMouse } from '@vueuse/core'
 
 const artboardEl = ref<HTMLDivElement>()
 const rootEl = ref<HTMLDivElement>()
@@ -319,10 +318,12 @@ onBeforeUnmount(() => {
   --init-artboard-scale: calc(
     (
         (
-            var(--init-window-width) - var(--ruler-size) - var(--scrollbar-size) -
-              64
-          ) / var(--artboard-size)
-      ) * 1
+            var(--init-window-width) - var(--ruler-size) -
+              var(--scrollbar-size) - 64
+          ) /
+          var(--artboard-size)
+      ) *
+      1
   );
   --init-artboard-offset-x: 32px;
   --init-artboard-offset-y: 32px;
