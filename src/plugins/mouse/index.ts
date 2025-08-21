@@ -6,6 +6,7 @@ import {
   type VelocityQueueOptions,
 } from '../../helpers/queue'
 import { prepareForDrag } from '../../helpers/artboard'
+import { MOUSE_BUTTONS } from '../../helpers/mouse'
 
 export const mouse = defineArtboardPlugin<{
   /**
@@ -127,7 +128,10 @@ export const mouse = defineArtboardPlugin<{
     }
     e.stopPropagation()
     artboard.setMomentum()
-    const canDrag = isPressingSpace || !options.should('useSpacebar')
+    const canDrag =
+      isPressingSpace ||
+      !options.should('useSpacebar') ||
+      e.buttons === MOUSE_BUTTONS.AUXILIARY
     if (canDrag) {
       e.preventDefault()
       if (document.activeElement instanceof HTMLElement) {
@@ -140,7 +144,11 @@ export const mouse = defineArtboardPlugin<{
       e.preventDefault()
     }
 
-    if ((e.buttons === 1 && canDrag) || (e.buttons === 2 && !isPressingSpace)) {
+    if (
+      (e.buttons === MOUSE_BUTTONS.PRIMARY && canDrag) ||
+      (e.buttons === MOUSE_BUTTONS.SECONDARY && !isPressingSpace) ||
+      e.buttons === MOUSE_BUTTONS.AUXILIARY
+    ) {
       e.preventDefault()
       velocityQueue.init(getQueueOptions())
       initialOffset = prepareForDrag(artboard)
@@ -159,7 +167,11 @@ export const mouse = defineArtboardPlugin<{
     if (e.pointerType !== 'mouse' || !initialOffset) {
       return
     }
-    if (!isPressingSpace && options.should('useSpacebar')) {
+    if (
+      !isPressingSpace &&
+      options.should('useSpacebar') &&
+      e.buttons !== MOUSE_BUTTONS.AUXILIARY
+    ) {
       onPointerUp(e)
       return
     }

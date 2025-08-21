@@ -1,6 +1,7 @@
 import { defineArtboardPlugin } from '../defineArtboardPlugin'
 import type { ArtboardLoopContext } from '../../types'
 import { inlineStyleOverrider } from '../../helpers/inlineStyleOverrider'
+import { MOUSE_BUTTONS } from '../../helpers/mouse'
 
 type ScrollbarOrientation = 'x' | 'y'
 
@@ -76,7 +77,7 @@ export const scrollbar = defineArtboardPlugin<{
   }
 
   function onThumbMouseMove(e: MouseEvent) {
-    if (e.buttons === 0) {
+    if (e.buttons === MOUSE_BUTTONS.NONE) {
       onMouseUp()
       return
     }
