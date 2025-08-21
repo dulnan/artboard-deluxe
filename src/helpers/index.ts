@@ -113,13 +113,13 @@ export function calculateCenterPosition(
 
 export function getMidpoint(touches: PossibleDragEventPosition): Coord {
   const first = touches[0]
-  const second = touches[1]
   if (!first) {
-    throw new Error('Need at least one touch in getTouchDistance')
+    throw new Error('Need at least one touch to determine midpoint.')
   }
   const x = first.clientX
   const y = first.clientY
 
+  const second = touches[1]
   if (second) {
     return {
       x: (x + second.clientX) / 2,
@@ -142,8 +142,9 @@ export function getDistance(a: Coord, b: Coord): number {
 export function getTouchDistance(touches: PossibleDragEventPosition): number {
   const first = touches[0]
   const second = touches[1]
+
   if (!first || !second) {
-    throw new Error('Need at least two touches in getTouchDistance')
+    return 0
   }
 
   return getDistance(
