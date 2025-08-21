@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NuxtSvgSpriteSymbol } from '#nuxt-svg-sprite/runtime'
+import type { NuxtSvgSpriteSymbol } from '#nuxt-svg-icon-sprite/runtime'
 import type { Rectangle } from 'artboard-deluxe'
 
 const props = defineProps<{

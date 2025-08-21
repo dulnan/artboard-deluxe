@@ -68,7 +68,7 @@ import {
   type Artboard,
   type PluginSticky,
 } from 'artboard-deluxe'
-import type { Origin } from '../../src/types/geometry'
+import type { Origin } from '#library/types/geometry'
 
 const rootEl = ref<HTMLDivElement>()
 const artboardEl = ref<HTMLDivElement>()

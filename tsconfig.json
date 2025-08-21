@@ -12,6 +12,7 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,5 +21,6 @@
     "strict": true,
     "strictNullChecks": true,
     "verbatimModuleSyntax": true
-  }
+  },
+  "include": ["src", "vite-env.d.ts"]
 }

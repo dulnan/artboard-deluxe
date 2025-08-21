@@ -69,4 +69,9 @@ export default defineConfig({
     ],
   },
   markdown: {},
+  ignoreDeadLinks: [
+    (url) => {
+      return url.toLowerCase().includes('/api/functions')
+    }
+  ]
 })

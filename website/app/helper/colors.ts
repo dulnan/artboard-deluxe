@@ -3,9 +3,9 @@ export function hexToRgb(hex: string) {
   if (result?.length !== 4) {
     return ''
   }
-  const r = parseInt(result[1], 16)
-  const g = parseInt(result[2], 16)
-  const b = parseInt(result[3], 16)
+  const r = parseInt(result[1]!, 16)
+  const g = parseInt(result[2]!, 16)
+  const b = parseInt(result[3]!, 16)
 
   return `${r} ${g} ${b}`
 }
@@ -17,7 +17,7 @@ export function componentToHex(c: number) {
 
 export function rgbToHex(rgb: string) {
   const [r, g, b] = rgb.split(' ').map((v) => parseInt(v))
-  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
+  return '#' + componentToHex(r!) + componentToHex(g!) + componentToHex(b!)
 }
 
 export const HTML_COLORS = {

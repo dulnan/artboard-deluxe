@@ -30,10 +30,15 @@ export default defineNuxtConfig({
     },
   },
 
+  tailwindcss: {
+    cssPath: './app/assets/css/tailwind.css',
+  },
+
   alias: {
     'artboard-deluxe': fileURLToPath(
       new URL('./../src/index.ts', import.meta.url),
     ),
+    '#library': fileURLToPath(new URL('./../src', import.meta.url)),
   },
 
   watch: [fileURLToPath(new URL('./../src/', import.meta.url))],
@@ -60,7 +65,6 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
       ],
       meta: [
         {
-          hid: 'og:image',
           property: 'og:image',
           content: '/og.jpg',
         },
@@ -71,7 +75,7 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
   svgIconSprite: {
     sprites: {
       default: {
-        importPatterns: ['./assets/icons-pixel/**/*.svg'],
+        importPatterns: ['./app/assets/icons-pixel/**/*.svg'],
       },
     },
   },

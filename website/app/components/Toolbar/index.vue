@@ -98,7 +98,7 @@ function randomInteger(min: number, max: number): number {
 
 function getRandomColor(exclude?: string): string {
   while (true) {
-    const color = COLORS[randomInteger(0, COLORS.length - 1)].rgb
+    const color = COLORS[randomInteger(0, COLORS.length - 1)]!.rgb
     if (color !== exclude) {
       return color
     }

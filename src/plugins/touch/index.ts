@@ -231,7 +231,7 @@ export const touch = defineArtboardPlugin<{
       artboard.setInteraction('dragging')
       initialTouchPoint = null
       initialOffset = { ...artboard.getOffset() }
-      lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+      lastTouch = { x: e.touches[0]!.clientX, y: e.touches[0]!.clientY }
       lastScaleTimestamp = performance.now()
       initialScale = artboard.getScale()
       return
@@ -320,11 +320,14 @@ export const touch = defineArtboardPlugin<{
   function onDragStart(touches: PossibleDragEventPosition) {
     touchStartDirection = determineTouchStartDirection()
     // Important: Use the last touch in the list.
-    lastTouch = {
-      x: touches[touches.length - 1].clientX,
-      y: touches[touches.length - 1].clientY,
+    const touch = touches[touches.length - 1]
+    if (touch) {
+      lastTouch = {
+        x: touch.clientX,
+        y: touch.clientY,
+      }
+      initialTouchPoint = { ...lastTouch }
     }
-    initialTouchPoint = { ...lastTouch }
     touchStartTime = performance.now()
     initialOffset = prepareForDrag(artboard)
     initialScale = artboard.getScale()

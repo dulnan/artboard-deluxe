@@ -291,8 +291,9 @@ export function createArtboard(
     }
 
     for (let i = 0; i < plugins.length; i++) {
-      if (plugins[i].loop) {
-        plugins[i].loop!(ctx)
+      const plugin = plugins[i]
+      if (plugin && plugin.loop) {
+        plugin.loop!(ctx)
       }
     }
 

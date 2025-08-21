@@ -83,6 +83,7 @@
     "untyped": "^2.0.0",
     "vitepress": "^1.6.4",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "vue-tsc": "^2.2.12"
   }
 }

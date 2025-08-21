@@ -65,7 +65,7 @@ export function applyMomentum(
 export function applyScaleMomentum(
   state: ArtboardState,
   currentTime: number,
-  minScale: number,
+  _minScale: number,
   maxScale: number,
 ): boolean {
   const deceleration = 0.09

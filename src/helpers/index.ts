@@ -112,17 +112,24 @@ export function calculateCenterPosition(
 }
 
 export function getMidpoint(touches: PossibleDragEventPosition): Coord {
-  const x = touches[0].clientX
-  const y = touches[0].clientY
-  if (touches.length === 1) {
+  const first = touches[0]
+  const second = touches[1]
+  if (!first) {
+    throw new Error('Need at least one touch in getTouchDistance')
+  }
+  const x = first.clientX
+  const y = first.clientY
+
+  if (second) {
     return {
-      x,
-      y,
+      x: (x + second.clientX) / 2,
+      y: (y + second.clientY) / 2,
     }
   }
+
   return {
-    x: (x + touches[1].clientX) / 2,
-    y: (y + touches[1].clientY) / 2,
+    x,
+    y,
   }
 }
 
@@ -133,14 +140,20 @@ export function getDistance(a: Coord, b: Coord): number {
 }
 
 export function getTouchDistance(touches: PossibleDragEventPosition): number {
+  const first = touches[0]
+  const second = touches[1]
+  if (!first || !second) {
+    throw new Error('Need at least two touches in getTouchDistance')
+  }
+
   return getDistance(
     {
-      x: touches[0].clientX,
-      y: touches[0].clientY,
+      x: first.clientX,
+      y: first.clientY,
     },
     {
-      x: touches[1].clientX,
-      y: touches[1].clientY,
+      x: second.clientX,
+      y: second.clientY,
     },
   )
 }
@@ -187,8 +200,8 @@ export function getDirection(a: Coord, b: Coord, threshold: number): Direction {
 export function getEventCoords(e: MouseEvent | TouchEvent): Coord {
   if (isTouchEvent(e)) {
     return {
-      x: e.touches[0].pageX,
-      y: e.touches[0].pageY,
+      x: e.touches[0]!.pageX,
+      y: e.touches[0]!.pageY,
     }
   }
   return {

@@ -74,6 +74,9 @@ export const dom = defineArtboardPlugin<{
 
   const { unobserve } = artboard.observeSizeChange(artboardElement, (entry) => {
     const size = entry.contentBoxSize[0]
+    if (!size) {
+      return
+    }
     if (entry.target instanceof HTMLImageElement) {
       artboard.setArtboardSize(
         entry.target.naturalWidth,
