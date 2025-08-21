@@ -44,7 +44,7 @@ export const wheel = defineArtboardPlugin<{
       e.preventDefault()
       e.stopPropagation()
 
-      doZoom(e.pageX, e.pageY, data.z)
+      doZoom(e.pageX, e.pageY, data.z * -1)
       return
     }
     const scrollSpeed = options.get('scrollSpeed', 1)
