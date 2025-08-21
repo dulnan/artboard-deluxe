@@ -65,15 +65,15 @@ export function createDirectionQueue(options: DirectionQueueOptions) {
     }
 
     const timeDiff =
-      queue.timeQueue[queue.timeQueue.length - 1] - queue.timeQueue[0]
+      queue.timeQueue[queue.timeQueue.length - 1]! - queue.timeQueue[0]!
     if (timeDiff > 50 || queue.queue.length > 5 || force) {
       // Calculate cumulative x and y deltas across all points.
       let totalDeltaX = 0
       let totalDeltaY = 0
 
       for (let i = 1; i < queue.queue.length; i++) {
-        totalDeltaX += queue.queue[i].x - queue.queue[i - 1].x
-        totalDeltaY += queue.queue[i].y - queue.queue[i - 1].y
+        totalDeltaX += queue.queue[i]!.x - queue.queue[i - 1]!.x
+        totalDeltaY += queue.queue[i]!.y - queue.queue[i - 1]!.y
       }
 
       // Calculate average movement per each axis.
@@ -137,19 +137,19 @@ export function createVelocityQueue(initOptions: VelocityQueueOptions) {
     }
 
     const lastIndex = length - 1
-    const lastPos = queue.queue[lastIndex]
-    const lastTime = queue.timeQueue[lastIndex]
+    const lastPos = queue.queue[lastIndex]!
+    const lastTime = queue.timeQueue[lastIndex]!
     let weightedVelocityX = 0
     let weightedVelocityY = 0
     let totalWeight = 0
 
     for (let i = lastIndex - 1; i >= 0; i--) {
-      const timeDiff = lastTime - queue.timeQueue[i]
+      const timeDiff = lastTime - queue.timeQueue[i]!
       if (timeDiff > maxTimeWindow) {
         break
       }
 
-      const pos = queue.queue[i]
+      const pos = queue.queue[i]!
       const distanceX = lastPos.x - pos.x
       const distanceY = lastPos.y - pos.y
       const timeInSeconds = timeDiff / 1000

@@ -72,26 +72,23 @@ export const dom = defineArtboardPlugin<{
     }
   }
 
-  function onSizeChange(entry: ResizeObserverEntry) {
-    if (entry.target === artboardElement) {
-      const size = entry.contentBoxSize[0]
-      if (!size) {
-        return
-      }
-
-      if (entry.target instanceof HTMLImageElement) {
-        artboard.setArtboardSize(
-          entry.target.naturalWidth,
-          entry.target.naturalHeight,
-        )
-        styleOverrider.set('width', entry.target.naturalWidth)
-        styleOverrider.set('height', entry.target.naturalHeight)
-        return
-      }
-
-      artboard.setArtboardSize(size.inlineSize, size.blockSize)
+  const { unobserve } = artboard.observeSizeChange(artboardElement, (entry) => {
+    const size = entry.contentBoxSize[0]
+    if (!size) {
+      return
     }
-  }
+    if (entry.target instanceof HTMLImageElement) {
+      artboard.setArtboardSize(
+        entry.target.naturalWidth,
+        entry.target.naturalHeight,
+      )
+      styleOverrider.set('width', entry.target.naturalWidth)
+      styleOverrider.set('height', entry.target.naturalHeight)
+      return
+    }
+
+    artboard.setArtboardSize(size.inlineSize, size.blockSize)
+  })
 
   function applyInitStyles() {
     styleOverrider.setMultiple({
@@ -155,11 +152,10 @@ export const dom = defineArtboardPlugin<{
       setInitTransformFromRect()
     }
     applyInitStyles()
-    artboard.observeSize(artboardElement)
   }
 
   function destroy() {
-    artboard.unobserveSize(artboardElement)
+    unobserve()
     artboardElement.removeEventListener('load', onImageLoaded)
     if (options.should('restoreStyles')) {
       styleOverrider.restore()
@@ -170,6 +166,5 @@ export const dom = defineArtboardPlugin<{
     options,
     loop,
     destroy,
-    onSizeChange,
   }
 })

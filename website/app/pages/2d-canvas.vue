@@ -222,7 +222,7 @@ function onTouchStart(e: TouchEvent) {
     return
   }
 
-  const touch = e.touches[0]
+  const touch = e.touches[0]!
 
   mode.value = 'drawing'
   updateMousePosition(touch.pageX, touch.pageY)
@@ -237,7 +237,7 @@ function onTouchMove(e: TouchEvent) {
   if (e.touches.length > 1) {
     return abortTouch()
   }
-  const touch = e.touches[0]
+  const touch = e.touches[0]!
   updateMousePosition(touch.pageX, touch.pageY)
 
   if (!isDrawing.value) {
@@ -594,16 +594,16 @@ function draw(brushWidth: number) {
   ctx.lineJoin = 'round'
   ctx.lineCap = 'round'
 
-  let p1 = points[0]
-  let p2 = points[1]
+  let p1 = points[0]!
+  let p2 = points[1]!
   ctx.moveTo(p2.x, p2.y)
   ctx.beginPath()
 
   for (let i = 1, len = points.length; i < len; i++) {
     const midPoint = midPointBtw(p1, p2)
     ctx.quadraticCurveTo(p1.x, p1.y, midPoint.x, midPoint.y)
-    p1 = points[i]
-    p2 = points[i + 1]
+    p1 = points[i]!
+    p2 = points[i + 1]!
   }
   ctx.lineTo(p1.x, p1.y)
   ctx.stroke()

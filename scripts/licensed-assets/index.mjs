@@ -67,7 +67,7 @@ async function decrypt(fileName) {
 
   const outputPath = path.join(
     __dirname,
-    './../../website/assets/fonts/licensed-fonts/',
+    './../../website/app/assets/fonts/licensed-fonts/',
     fileName,
   )
   await fs.promises.writeFile(outputPath, decryptedData)

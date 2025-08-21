@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import type { VelocityQueueOptions } from '../../../src/helpers/queue'
+import type { VelocityQueueOptions } from '#library/helpers/queue'
 
 const props = defineProps<{
   type: string

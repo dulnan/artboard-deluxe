@@ -39,7 +39,7 @@
 <script setup lang="ts">
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 import type { PluginOption } from '~/helper/pluginOptions'
-import type { Artboard, ArtboardPluginDefinition } from '../../../src/types'
+import type { Artboard, ArtboardPluginDefinition } from '#library/types'
 
 const props = defineProps<{
   name: string

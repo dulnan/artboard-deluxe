@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import type { AnimationOptions } from '../../../src/helpers/animation'
-import { EASINGS, type AnimationEasing } from '../../../src/helpers/easing'
+import type { AnimationOptions } from '#library/helpers/animation'
+import { EASINGS, type AnimationEasing } from '#library/helpers/easing'
 
 const props = defineProps<{
   type: string

@@ -16,6 +16,14 @@ export type PluginInstance<T> =
     ? ArtboardPluginInstance<O, R>
     : never
 
+export type ObserverSizeChangeCallback<T extends Element> = (
+  entry: ResizeObserverEntry & { target: T },
+) => void
+
+export type ObserverSizeChangeContext = {
+  unobserve: () => void
+}
+
 /**
  * Defines possible scroll directions.
  */
@@ -39,15 +47,11 @@ export type ArtboardPluginInstance<
    * The options helper.
    */
   options: ArtboardPluginOptions<O>
+
   /**
    * Remove event listeners and clean up.
    */
   destroy?: () => void
-
-  /**
-   * Called when the size of an element previously observed using `artboard.observeSize()` changes.
-   */
-  onSizeChange?: (entry: ResizeObserverEntry) => void
 
   /**
    * Called in the main animation loop.
@@ -887,14 +891,10 @@ export type Artboard = {
    *
    * @param element - The element to observe.
    */
-  observeSize(element: HTMLElement): void
-
-  /**
-   * Stop observing the size of the given element.
-   *
-   * @param element - The element to stop observing the size.
-   */
-  unobserveSize(element: HTMLElement): void
+  observeSizeChange<T extends HTMLElement = HTMLElement>(
+    element: T,
+    cb: ObserverSizeChangeCallback<T>,
+  ): ObserverSizeChangeContext
 
   /**
    * Returns the root element.

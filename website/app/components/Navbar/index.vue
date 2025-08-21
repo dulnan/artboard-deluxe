@@ -1,9 +1,12 @@
 <template>
   <header class="border-b border-b-black flex items-center">
-    <div class="text-[20px] font-alliance leading-none px-16 hidden md:block">
+    <NuxtLink
+      to="/"
+      class="text-[20px] font-alliance leading-none px-16 hidden md:block"
+    >
       <span class="text-primary">Artboard</span>
       <span class="text-secondary">Deluxe</span>
-    </div>
+    </NuxtLink>
     <nav class="flex h-full">
       <NuxtLink
         v-for="link in links"

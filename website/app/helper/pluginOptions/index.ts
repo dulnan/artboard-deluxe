@@ -1,5 +1,5 @@
-import type { AnimationOptions } from '../../../src/helpers/animation'
-import type { VelocityQueueOptions } from '../../../src/helpers/queue'
+import type { AnimationOptions } from '#library/helpers/animation'
+import type { VelocityQueueOptions } from '#library/helpers/queue'
 
 export type PluginOptionBoolean = {
   type: 'boolean'

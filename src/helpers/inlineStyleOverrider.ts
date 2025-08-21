@@ -69,7 +69,7 @@ export function inlineStyleOverrider(
     }
 
     if (prev === undefined) {
-      overridenStyles.set(property, element.style[property])
+      overridenStyles.set(property, element.style[property] ?? '')
     }
 
     element.style[property] = typeof value === 'number' ? value + 'px' : value
@@ -118,10 +118,12 @@ export function inlineStyleOverrider(
 
   function restore() {
     try {
-      overridenStyles.entries().forEach(([property, value]) => {
+      const styleEntries = [...overridenStyles.entries()]
+      styleEntries.forEach(([property, value]) => {
         element.style[property] = value
       })
-      overridenProperties.entries().forEach(([property, value]) => {
+      const propertyEntries = [...overridenProperties.entries()]
+      propertyEntries.forEach(([property, value]) => {
         element.style.setProperty(property, value)
       })
     } catch {

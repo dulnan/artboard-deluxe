@@ -163,8 +163,8 @@ function onTouchStart(e: TouchEvent) {
     return
   }
 
-  mouseX.value = e.touches[0].pageX
-  mouseY.value = e.touches[0].pageY
+  mouseX.value = e.touches[0]!.pageX
+  mouseY.value = e.touches[0]!.pageY
 
   e.preventDefault()
   e.stopPropagation()

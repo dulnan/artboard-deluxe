@@ -44,10 +44,10 @@ const fontSize: Record<string, [string, string]> = {
 
 const config: Config = {
   content: [
-    './app.vue',
-    './assets/css/*.css',
-    './components/**/*.{vue,ts,js}',
-    './error.vue',
+    './app/app.vue',
+    './app/assets/css/*.css',
+    './app/components/**/*.{vue,ts,js}',
+    './app/error.vue',
   ],
   theme: {
     extend: {

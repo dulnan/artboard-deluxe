@@ -19,6 +19,8 @@ import type {
   Interaction,
   Momentum,
   Direction,
+  ObserverSizeChangeCallback,
+  ObserverSizeChangeContext,
 } from './../types'
 import type { Boundaries, Coord, Rectangle, Size } from '../types/geometry'
 
@@ -88,8 +90,6 @@ export function createArtboard(
   /** Plugins. */
   let plugins: ArtboardPluginInstance[] = []
 
-  let resizeTimeout: number | null = null
-  let init = true
   let lastRootRectUpdate = 0
 
   function handleResize(entries: ResizeObserverEntry[]) {
@@ -106,18 +106,27 @@ export function createArtboard(
         state.rootSize.width = size.inlineSize
         state.rootSize.height = size.blockSize
       } else {
-        // Let plugins handle size changes.
-        for (const plugin of plugins) {
-          if (plugin.onSizeChange) {
-            plugin.onSizeChange(entry)
-          }
+        const cb = sizeObserverMap.get(entry.target)
+        if (cb) {
+          cb(entry)
         }
       }
     }
   }
 
+  const sizeObserverMap = new WeakMap<
+    Element,
+    ObserverSizeChangeCallback<Element>
+  >()
+  let resizeTimeout: number | null = null
+  let init = true
+
   /** The ResizeObserver instance. */
   const resizeObserver = new ResizeObserver(function (entries) {
+    if (import.meta.dev) {
+      console.log('Resize Observer called')
+    }
+
     // Run the observer initially.
     if (init) {
       init = false
@@ -131,9 +140,35 @@ export function createArtboard(
 
     // Debounce the callback.
     resizeTimeout = window.setTimeout(function () {
+      if (import.meta.dev) {
+        console.log('handleResize', entries)
+      }
       handleResize(entries)
     }, 300)
   })
+
+  function observeSizeChange<T extends Element>(
+    element: T,
+    cb: ObserverSizeChangeCallback<T>,
+  ): ObserverSizeChangeContext {
+    if (sizeObserverMap.has(element)) {
+      throw new Error('An observer for this element has already been added.')
+    }
+
+    if (import.meta.dev) {
+      console.log('observeSizeChange', element, cb)
+    }
+
+    sizeObserverMap.set(element, cb as ObserverSizeChangeCallback<Element>)
+    resizeObserver.observe(element)
+
+    return {
+      unobserve: () => {
+        sizeObserverMap.delete(element)
+        resizeObserver.unobserve(element)
+      },
+    }
+  }
 
   function setOptions(newOptions: ArtboardOptions) {
     options.setAllOptions(newOptions)
@@ -256,8 +291,9 @@ export function createArtboard(
     }
 
     for (let i = 0; i < plugins.length; i++) {
-      if (plugins[i].loop) {
-        plugins[i].loop!(ctx)
+      const plugin = plugins[i]
+      if (plugin && plugin.loop) {
+        plugin.loop!(ctx)
       }
     }
 
@@ -825,6 +861,10 @@ export function createArtboard(
     } else {
       state.momentum = null
     }
+
+    if (import.meta.dev) {
+      console.log('setMomentum', state.momentum)
+    }
   }
 
   function getTouchDirection() {
@@ -928,14 +968,6 @@ export function createArtboard(
     )
   }
 
-  function observeSize(el: HTMLElement) {
-    resizeObserver.observe(el)
-  }
-
-  function unobserveSize(el: HTMLElement) {
-    resizeObserver.unobserve(el)
-  }
-
   function getAnimation() {
     if (state.animation) {
       return { ...state.animation }
@@ -949,6 +981,7 @@ export function createArtboard(
   }
 
   const artboard: Artboard = {
+    observeSizeChange,
     wasMomentumScrolling,
     addPlugin,
     animateOrJumpBy,
@@ -971,7 +1004,6 @@ export function createArtboard(
     getMomentum,
     getAnimation,
     loop,
-    observeSize,
     options,
     removePlugin,
     resetZoom,
@@ -998,7 +1030,6 @@ export function createArtboard(
     setScale,
     setTouchDirection,
     setMomentum,
-    unobserveSize,
     zoomIn,
     zoomOut,
     getBoundaries,

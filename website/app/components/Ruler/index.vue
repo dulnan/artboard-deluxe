@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useElementSize, useRafFn } from '@vueuse/core/index.cjs'
+import { useElementSize, useRafFn } from '@vueuse/core'
 
 const props = defineProps<{
   scale: number

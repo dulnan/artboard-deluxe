@@ -117,14 +117,16 @@ export const sticky = defineArtboardPlugin<
 
   const coords: Coord = { x: 0, y: 0 }
 
-  function onSizeChange(entry: ResizeObserverEntry) {
-    if (entry.target !== target) return
-    const newSize = entry.borderBoxSize?.[0]
-    if (!newSize) return
+  const observer =
+    target instanceof HTMLElement
+      ? artboard.observeSizeChange(target, (entry) => {
+          const newSize = entry.borderBoxSize?.[0]
+          if (!newSize) return
 
-    size.width = newSize.inlineSize
-    size.height = newSize.blockSize
-  }
+          size.width = newSize.inlineSize
+          size.height = newSize.blockSize
+        })
+      : null
 
   /**
    * Precompute option-based values that don't require artboard state.
@@ -229,13 +231,9 @@ export const sticky = defineArtboardPlugin<
     }
   }
 
-  if (target instanceof HTMLElement) {
-    artboard.observeSize(target)
-  }
-
   function destroy() {
-    if (target instanceof HTMLElement) {
-      artboard.unobserveSize(target)
+    if (observer) {
+      observer.unobserve()
     }
     if (options.should('restoreStyles') && style) {
       style.restore()
@@ -263,7 +261,6 @@ export const sticky = defineArtboardPlugin<
     options,
     destroy,
     loop,
-    onSizeChange,
     getRect,
   }
 })

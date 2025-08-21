@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NuxtSvgSpriteSymbol } from '#nuxt-svg-sprite/runtime'
+import type { NuxtSvgSpriteSymbol } from '#nuxt-svg-icon-sprite/runtime'
 
 type Plugin = {
   title: string
@@ -165,7 +165,7 @@ const plugins: Plugin[] = [
   } as Plugin
 })
 
-const activePluginId = useState('activePluginId', () => plugins[0].name)
+const activePluginId = useState('activePluginId', () => plugins[0]?.name)
 
 const activePlugin = computed(() => {
   if (!activePluginId.value) {

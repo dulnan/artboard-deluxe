@@ -72,10 +72,7 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
     let currentScale = artboard.getScale()
     let visibleArea = { x: 0, y: 0, width: 0, height: 0 }
 
-    function onSizeChange(entry: ResizeObserverEntry) {
-      if (entry.target !== overviewEl) {
-        return
-      }
+    const { unobserve } = artboard.observeSizeChange(overviewEl, (entry) => {
       const size = entry?.contentRect
       if (!size) {
         return
@@ -83,15 +80,15 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
 
       overviewWidth = size.width
       overviewHeight = size.height
-    }
+    })
 
     /** Removes all event listeners and cleans up. */
     function destroy() {
+      unobserve()
       overviewEl.removeEventListener('pointerdown', onPointerDown)
       overviewEl.removeEventListener('touchstart', onTouchStart)
       document.removeEventListener('pointermove', onPointerMove)
       document.removeEventListener('pointerup', onPointerUp)
-      artboard.unobserveSize(overviewEl)
       if (options.should('restoreStyles')) {
         overviewElStyleOverrider.restore()
         visibileEllStyleOverrider.restore()
@@ -397,13 +394,10 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
     overviewEl.addEventListener('pointerdown', onPointerDown)
     overviewEl.addEventListener('touchstart', onTouchStart)
 
-    artboard.observeSize(overviewEl)
-
     return {
       options,
       destroy,
       loop,
-      onSizeChange,
     }
   },
 )

@@ -1,22 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "noUncheckedIndexedAccess": false,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitOverride": true,
+    "target": "es2022",
     "module": "preserve",
-    "esModuleInterop": true,
-    "useDefineForClassFields": true,
-    "noImplicitThis": true,
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "Node",
+    "rootDir": ".",
+    "outDir": "build",
     "allowSyntheticDefaultImports": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "lib": ["ESNext", "dom", "dom.iterable"]
+    "importHelpers": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src"]
+  "include": ["src", "vite-env.d.ts"]
 }

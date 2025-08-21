@@ -1,6 +1,9 @@
 import { defineBuildConfig } from 'unbuild'
 
 export default defineBuildConfig({
+  replace: {
+    'import.meta.dev': 'undefined',
+  },
   // If entries is not provided, will be automatically inferred from package.json
   entries: [
     {

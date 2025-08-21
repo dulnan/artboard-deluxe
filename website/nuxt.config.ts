@@ -2,7 +2,7 @@ import packageJson from './../package.json'
 import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: '2025-08-21',
   devtools: { enabled: true },
   modules: [
     '@nuxt/eslint',
@@ -30,10 +30,15 @@ export default defineNuxtConfig({
     },
   },
 
+  tailwindcss: {
+    cssPath: './app/assets/css/tailwind.css',
+  },
+
   alias: {
     'artboard-deluxe': fileURLToPath(
       new URL('./../src/index.ts', import.meta.url),
     ),
+    '#library': fileURLToPath(new URL('./../src', import.meta.url)),
   },
 
   watch: [fileURLToPath(new URL('./../src/', import.meta.url))],
@@ -60,7 +65,6 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
       ],
       meta: [
         {
-          hid: 'og:image',
           property: 'og:image',
           content: '/og.jpg',
         },
@@ -71,7 +75,7 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
   svgIconSprite: {
     sprites: {
       default: {
-        importPatterns: ['./assets/icons-pixel/**/*.svg'],
+        importPatterns: ['./app/assets/icons-pixel/**/*.svg'],
       },
     },
   },
@@ -89,5 +93,6 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
       crawlLinks: false,
       routes: ['/', '/404.html', '/playground', '/2d-canvas'],
     },
+    preset: 'netlify',
   },
 })
