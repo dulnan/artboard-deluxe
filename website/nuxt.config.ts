@@ -2,7 +2,7 @@ import packageJson from './../package.json'
 import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: '2025-08-21',
   devtools: { enabled: true },
   modules: [
     '@nuxt/eslint',
@@ -93,5 +93,6 @@ document.documentElement.style.setProperty("--init-window-width", window.innerWi
       crawlLinks: false,
       routes: ['/', '/404.html', '/playground', '/2d-canvas'],
     },
+    preset: 'netlify',
   },
 })
