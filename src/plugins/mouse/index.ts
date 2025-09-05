@@ -75,7 +75,7 @@ export const mouse = defineArtboardPlugin<{
       capture: true,
     })
     rootEl.removeEventListener('pointerdown', onPointerDown, {
-      capture: true,
+      capture: false,
     })
     rootEl.removeEventListener('click', onClick, {
       capture: true,
