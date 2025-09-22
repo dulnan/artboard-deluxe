@@ -74,15 +74,51 @@ export function calculateCenterPosition(
   // The width to use when determining the center.
   widthToPlace: number,
 ): { centerX: number; availableWidth: number } {
-  // The center of the viewport.
   const viewportCenterX = (viewport.x + viewport.width) / 2
-
-  // The amount of pixels a blocking rect must be away from the center so it
-  // affects positioning.
   const blockingThreshold = viewport.width / 7
 
-  const x = blockingRects.reduce((acc, rect) => {
-    // If the rectangle is left of the center.
+  // Only use blocking rects that create a meaningful constraint. e.g. if a
+  // blocking rect is a toolbar that covers the entire width with only a
+  // height of 50, it's not considered meaningful.
+  const horizontallyConstrainingRects = blockingRects.filter((rect) => {
+    const rectLeft = rect.x
+    const rectRight = rect.x + rect.width
+    const viewportLeft = viewport.x
+    const viewportRight = viewport.x + viewport.width
+
+    const leftSpace = Math.max(0, rectLeft - viewportLeft)
+    const rightSpace = Math.max(0, viewportRight - rectRight)
+
+    // Skip if the rect is outside the viewport.
+    if (rectRight <= viewportLeft || rectLeft >= viewportRight) {
+      return false
+    }
+
+    // Calculate how much of the viewport width this rect covers.
+    const overlapLeft = Math.max(rectLeft, viewportLeft)
+    const overlapRight = Math.min(rectRight, viewportRight)
+    const overlapWidth = Math.max(0, overlapRight - overlapLeft)
+    const coverageRatio = overlapWidth / viewport.width
+
+    // Skip if it covers most of the viewport width.
+    if (coverageRatio > 0.85) {
+      return false
+    }
+
+    // Skip if it's centered and doesn't create meaningful side spaces.
+    const rectCenterX = (rectLeft + rectRight) / 2
+    const isCentered =
+      Math.abs(rectCenterX - viewportCenterX) < blockingThreshold
+
+    if (isCentered) {
+      const minUsableSpace = Math.max(widthToPlace, viewport.width * 0.2)
+      return leftSpace >= minUsableSpace || rightSpace >= minUsableSpace
+    }
+
+    return true
+  })
+
+  const x = horizontallyConstrainingRects.reduce((acc, rect) => {
     if (
       rect.x < viewportCenterX &&
       viewportCenterX - rect.x > blockingThreshold &&
@@ -93,8 +129,7 @@ export function calculateCenterPosition(
     return acc
   }, viewport.x)
 
-  const availableWidth = blockingRects.reduce((acc, rect) => {
-    // If the rectangle is right of the center.
+  const availableWidth = horizontallyConstrainingRects.reduce((acc, rect) => {
     if (
       rect.x > viewportCenterX &&
       rect.x - viewportCenterX > blockingThreshold &&
@@ -105,9 +140,7 @@ export function calculateCenterPosition(
     return acc
   }, viewport.width + viewport.x)
 
-  // Calculate the center X.
   const centerX = (x + availableWidth) / 2 - widthToPlace / 2 - viewport.x
-
   return { centerX, availableWidth: availableWidth - x }
 }
 

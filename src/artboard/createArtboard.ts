@@ -307,7 +307,7 @@ export function createArtboard(
     if (!state.artboardSize) {
       return state.offset.x
     }
-    const scaleToUse = targetScale || state.scale
+    const scaleToUse = targetScale ?? state.scale
     const blockingRects = options.blockingRects
     return calculateCenterPosition(
       blockingRects,
