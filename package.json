@@ -1,6 +1,6 @@
 {
   "name": "artboard-deluxe",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Touch-friendly draggable artboard",
   "files": [
     "dist"
@@ -40,7 +40,6 @@
     "dev:prepare": "nuxt prepare website",
     "website:build": "nuxi generate website",
     "preview": "nuxt preview website",
-    "postinstall": "npm run dev:prepare",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "lint": "eslint",
