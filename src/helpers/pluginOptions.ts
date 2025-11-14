@@ -84,6 +84,11 @@ export function pluginOptions<T extends object>(
     recompute()
   }
 
+  function setMultiple(newOptions: Partial<T>) {
+    options = { ...options, ...newOptions }
+    recompute()
+  }
+
   function computed<R>(callback: (opts: T) => R): { value: R } {
     if (computedCache.has(callback)) {
       return computedCache.get(callback) as { value: R }
@@ -102,6 +107,7 @@ export function pluginOptions<T extends object>(
     should,
     set,
     setAll,
+    setMultiple,
     computed,
   }
 }

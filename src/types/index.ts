@@ -104,6 +104,11 @@ export type ArtboardPluginOptions<T extends object> = {
   setAll(newOptions: T): void
 
   /**
+   * Set multiple options at once.
+   */
+  setMultiple(newOptions: Partial<T>): void
+
+  /**
    * Compute and cache a value based on the current options.
    *
    * If any option is changed (via set or setAll), the cache is cleared.
