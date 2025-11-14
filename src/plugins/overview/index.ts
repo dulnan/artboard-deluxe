@@ -28,6 +28,16 @@ type OverviewOptions = {
    * aspect ratio of the artboard.
    */
   autoHeight?: boolean
+
+  /**
+   * The maximum height for the overview element when autoHeight is enabled.
+   *
+   * If the calculated height exceeds this value, the height will be capped
+   * and the artboard will be scaled to fit within the constrained dimensions.
+   *
+   * This is useful for preventing the overview from exceeding the viewport height.
+   */
+  maxHeight?: number
 }
 
 export const overview = defineArtboardPlugin<OverviewOptions>(
@@ -125,12 +135,20 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
       autoHeight: boolean,
       artboardSize: Size,
       padding: number,
+      maxHeight?: number,
     ) {
       if (autoHeight) {
         const artboardAspect = artboardSize.width / artboardSize.height
         const availableWidth = overviewWidth - padding * 2
         const height = availableWidth / artboardAspect
-        return height + padding * 2
+        const calculatedHeight = height + padding * 2
+
+        // If maxHeight is set, clamp the calculated height
+        if (maxHeight !== undefined && calculatedHeight > maxHeight) {
+          return maxHeight
+        }
+
+        return calculatedHeight
       }
 
       return overviewHeight
@@ -147,6 +165,7 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
       const autoHeight = options.should('autoHeight')
 
       const padding = options.get('padding', 20)
+      const maxHeight = options.get('maxHeight')
 
       // Minimal available size for the artboard in the overview (in pixels).
       const minimalAvailableWidth = 1
@@ -163,6 +182,7 @@ export const overview = defineArtboardPlugin<OverviewOptions>(
         autoHeight,
         artboardSize,
         padding,
+        maxHeight,
       )
 
       // Maximum total padding that can be applied without making the available sizes negative.
