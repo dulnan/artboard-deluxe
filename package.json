@@ -55,7 +55,8 @@
     "typecheck:library": "tsc",
     "typecheck:nuxt": "npx nuxi typecheck website",
     "knip": "knip",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "author": "Jan Hug <me@dulnan.net>",
   "license": "MIT",
@@ -64,10 +65,12 @@
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@types/node": "^24.3.0",
     "@unhead/schema-org": "^2.0.14",
+    "@vitest/coverage-v8": "^4.0.18",
     "@vueuse/core": "^13.7.0",
     "dotenv": "^17.2.1",
     "eslint-plugin-sonarjs": "^3.0.4",
     "eslint-plugin-tailwindcss": "^3.18.2",
+    "jsdom": "^28.1.0",
     "knip": "^5.63.0",
     "nuxt": "^4.0.3",
     "nuxt-schema-org": "^5.0.6",

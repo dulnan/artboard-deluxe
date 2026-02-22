@@ -323,7 +323,7 @@ export function asValidNumber(
 
   // Try to parse the string to a number and call the method again.
   if (typeof value === 'string') {
-    return asValidNumber(parseFloat(value))
+    return asValidNumber(parseFloat(value), defaultValue)
   }
 
   if (Number.isNaN(value)) {
