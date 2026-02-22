@@ -438,7 +438,9 @@ onMounted(() => {
           '--artboard-root-height',
         ],
       }),
-      raf(),
+      raf({
+        fps: 120,
+      }),
     ],
     {
       getBlockingRects,

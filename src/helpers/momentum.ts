@@ -32,9 +32,10 @@ export function applyMomentum(
   const appliedDecelerationX = inLeft && inRight ? deceleration : 0.85
   const appliedDecelerationY = inTop && inBottom ? deceleration : 0.85
 
-  // Apply velocity decay.
-  state.momentum.x *= appliedDecelerationX
-  state.momentum.y *= appliedDecelerationY
+  // Apply velocity decay (normalized to 60fps).
+  const dtFactor = deltaTime * 60
+  state.momentum.x *= Math.pow(appliedDecelerationX, dtFactor)
+  state.momentum.y *= Math.pow(appliedDecelerationY, dtFactor)
 
   const vxDone = Math.abs(state.momentum.x) < 2
   const vyDone = Math.abs(state.momentum.y) < 2
@@ -83,12 +84,14 @@ export function applyScaleMomentum(
   }
 
   if (state.scaleVelocity.scale > maxScale) {
-    state.scaleVelocity.scale = state.scaleVelocity.scale * 0.95
+    state.scaleVelocity.scale =
+      state.scaleVelocity.scale * Math.pow(0.95, deltaTime * 60)
   }
 
-  state.offset.x = lerp(state.offset.x, state.scaleVelocity.x, deceleration)
-  state.offset.y = lerp(state.offset.y, state.scaleVelocity.y, deceleration)
-  state.scale = lerp(state.scale, state.scaleVelocity.scale, deceleration)
+  const dtDeceleration = 1 - Math.pow(1 - deceleration, deltaTime * 60)
+  state.offset.x = lerp(state.offset.x, state.scaleVelocity.x, dtDeceleration)
+  state.offset.y = lerp(state.offset.y, state.scaleVelocity.y, dtDeceleration)
+  state.scale = lerp(state.scale, state.scaleVelocity.scale, dtDeceleration)
 
   const vxDone = Math.abs(state.scaleVelocity.x - state.offset.x) < minThreshold
   const vyDone = Math.abs(state.scaleVelocity.y - state.offset.y) < minThreshold
