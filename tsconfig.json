@@ -20,7 +20,10 @@
     "noImplicitThis": false,
     "strict": true,
     "strictNullChecks": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": ["src", "vite-env.d.ts"]
 }

@@ -54,7 +54,8 @@
     "typecheck": "npm run typecheck:library && npm run typecheck:nuxt",
     "typecheck:library": "tsc",
     "typecheck:nuxt": "npx nuxi typecheck website",
-    "knip": "knip"
+    "knip": "knip",
+    "test": "vitest run"
   },
   "author": "Jan Hug <me@dulnan.net>",
   "license": "MIT",
@@ -81,6 +82,7 @@
     "unbuild": "^3.6.1",
     "untyped": "^2.0.0",
     "vitepress": "^1.6.4",
+    "vitest": "^4.0.18",
     "vue": "latest",
     "vue-router": "latest",
     "vue-tsc": "^2.2.12"
