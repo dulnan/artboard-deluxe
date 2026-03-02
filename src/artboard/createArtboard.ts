@@ -4,6 +4,7 @@ import {
   clamp,
   dampenRelative,
   limitOffset,
+  parseEdges,
 } from './../helpers'
 import { applyAnimation, type AnimationOptions } from './../helpers/animation'
 import { applyMomentum, applyScaleMomentum } from './../helpers/momentum'
@@ -726,26 +727,41 @@ export function createArtboard(
     const targetY = targetRect.y
 
     const scaleOption = animationOptions?.scale || 'none'
+    const block = animationOptions?.block || 'center'
+    const inline = animationOptions?.inline || 'center'
+    const pad = parseEdges(animationOptions?.padding)
+    const useBlockingArea =
+      animationOptions?.area === 'blocking' || scaleOption === 'blocking'
+
+    // Effective viewport after padding.
+    const effectiveLeft = pad.left
+    const effectiveTop = pad.top
+    const effectiveWidth = state.rootSize.width - pad.left - pad.right
+    const effectiveHeight = state.rootSize.height - pad.top - pad.bottom
+
+    // Compute blocking rect info when needed for scaling or positioning.
+    let blockingInfo: {
+      availableWidth: number
+      availableLeft: number
+    } | null = null
+    if (useBlockingArea && options.hasBlockingRects) {
+      blockingInfo = calculateCenterPosition(
+        options.blockingRects,
+        rootEl.getBoundingClientRect(),
+        targetWidth,
+      )
+    }
 
     const targetScale = (() => {
       if (scaleOption === 'full') {
-        // The required scales to fit the target element within the root element.
-        const scaleX = (state.rootSize.width - options.margin * 2) / targetWidth
-        const scaleY =
-          (state.rootSize.height - options.margin * 2) / targetHeight
-
-        // We use the smaller value so that we scale it in such a way that it always fits in the root rect.
+        const scaleX = (effectiveWidth - options.margin * 2) / targetWidth
+        const scaleY = (effectiveHeight - options.margin * 2) / targetHeight
         return Math.min(scaleX, scaleY, options.maxScale)
-      } else if (scaleOption === 'blocking' && options.hasBlockingRects) {
-        const { availableWidth } = calculateCenterPosition(
-          options.blockingRects,
-          rootEl.getBoundingClientRect(),
-          targetWidth,
-        )
-        const targetScale = (availableWidth - options.margin * 2) / targetWidth
-        const scaleY =
-          (state.rootSize.height - options.margin * 2) / targetHeight
-        return Math.min(targetScale, scaleY, options.maxScale)
+      } else if (scaleOption === 'blocking' && blockingInfo) {
+        const scaleX =
+          (blockingInfo.availableWidth - options.margin * 2) / targetWidth
+        const scaleY = (effectiveHeight - options.margin * 2) / targetHeight
+        return Math.min(scaleX, scaleY, options.maxScale)
       }
 
       return 1
@@ -756,20 +772,57 @@ export function createArtboard(
     const scrollX = axis === 'x' || axis === 'both'
     const scrollY = axis === 'y' || axis === 'both'
 
+    const scaledTargetX = targetX * targetScale
+    const scaledTargetY = targetY * targetScale
+    const scaledTargetW = targetWidth * targetScale
+    const scaledTargetH = targetHeight * targetScale
+
     const centeredOffsetX = (() => {
-      if (scaleOption === 'blocking') {
-        return getCenterX(targetScale)
+      if (!scrollX) {
+        return state.offset.x
       }
-      return scrollX
-        ? -(targetX * targetScale) +
-            (state.rootSize.width - targetWidth * targetScale) / 2
-        : state.offset.x
+
+      // Position within the available (non-blocked) area.
+      if (blockingInfo) {
+        const rootRect = rootEl.getBoundingClientRect()
+        // availableLeft is in viewport coordinates; convert to root-relative.
+        const areaLeft = blockingInfo.availableLeft - rootRect.x
+        const areaWidth = blockingInfo.availableWidth
+
+        return computeAlignedOffset(
+          inline,
+          scaledTargetX,
+          scaledTargetW,
+          areaLeft,
+          areaWidth,
+          state.offset.x,
+        )
+      }
+
+      return computeAlignedOffset(
+        inline,
+        scaledTargetX,
+        scaledTargetW,
+        effectiveLeft,
+        effectiveWidth,
+        state.offset.x,
+      )
     })()
 
-    const centeredOffsetY = scrollY
-      ? -(targetY * targetScale) +
-        (state.rootSize.height - targetHeight * targetScale) / 2
-      : state.offset.y
+    const centeredOffsetY = (() => {
+      if (!scrollY) {
+        return state.offset.y
+      }
+
+      return computeAlignedOffset(
+        block,
+        scaledTargetY,
+        scaledTargetH,
+        effectiveTop,
+        effectiveHeight,
+        state.offset.y,
+      )
+    })()
 
     if (behavior === 'smooth' || (behavior === 'auto' && !state.animation)) {
       animateTo(
@@ -788,6 +841,56 @@ export function createArtboard(
     cancelAnimation()
     setOffset(centeredOffsetX, centeredOffsetY, true)
     setScale(targetScale, true)
+  }
+
+  /**
+   * Compute the offset for a single axis based on alignment mode.
+   */
+  function computeAlignedOffset(
+    alignment: 'start' | 'center' | 'end' | 'nearest' | 'auto',
+    scaledTargetPos: number,
+    scaledTargetSize: number,
+    areaStart: number,
+    areaSize: number,
+    currentOffset: number,
+  ): number {
+    switch (alignment) {
+      case 'start':
+        return areaStart - scaledTargetPos
+      case 'end':
+        return areaStart + areaSize - scaledTargetSize - scaledTargetPos
+      case 'auto':
+        if (scaledTargetSize > areaSize) {
+          return areaStart - scaledTargetPos
+        }
+        return areaStart + (areaSize - scaledTargetSize) / 2 - scaledTargetPos
+      case 'center':
+        return areaStart + (areaSize - scaledTargetSize) / 2 - scaledTargetPos
+      case 'nearest': {
+        // Where the target currently appears in the viewport.
+        const targetStart = currentOffset + scaledTargetPos
+        const targetEnd = targetStart + scaledTargetSize
+        const areaEnd = areaStart + areaSize
+
+        // Fully visible: no-op.
+        if (targetStart >= areaStart && targetEnd <= areaEnd) {
+          return currentOffset
+        }
+
+        // Target larger than area: align start.
+        if (scaledTargetSize >= areaSize) {
+          return areaStart - scaledTargetPos
+        }
+
+        // Overflows on start side.
+        if (targetStart < areaStart) {
+          return areaStart - scaledTargetPos
+        }
+
+        // Overflows on end side.
+        return areaStart + areaSize - scaledTargetSize - scaledTargetPos
+      }
+    }
   }
 
   function setArtboardSize(width: number, height: number) {

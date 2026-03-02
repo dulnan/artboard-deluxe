@@ -145,6 +145,7 @@ describe('calculateCenterPosition', () => {
     const result = calculateCenterPosition([], viewport, 200)
     expect(result.centerX).toBeCloseTo(400)
     expect(result.availableWidth).toBe(1000)
+    expect(result.availableLeft).toBe(0)
   })
 
   it('shifts center when a blocking rect is on the left', () => {
@@ -152,6 +153,8 @@ describe('calculateCenterPosition', () => {
     const result = calculateCenterPosition(blockingRects, viewport, 200)
     // Available space is from 300 to 1000
     expect(result.centerX).toBeGreaterThan(400)
+    expect(result.availableLeft).toBe(300)
+    expect(result.availableWidth).toBe(700)
   })
 
   it('ignores blocking rects that cover most of the viewport', () => {
@@ -159,6 +162,7 @@ describe('calculateCenterPosition', () => {
     const result = calculateCenterPosition(blockingRects, viewport, 200)
     // Should be same as no blocking rects since this covers >85% width
     expect(result.centerX).toBeCloseTo(400)
+    expect(result.availableLeft).toBe(0)
   })
 })
 

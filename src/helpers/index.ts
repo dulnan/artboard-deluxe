@@ -73,7 +73,7 @@ export function calculateCenterPosition(
   viewport: Rectangle,
   // The width to use when determining the center.
   widthToPlace: number,
-): { centerX: number; availableWidth: number } {
+): { centerX: number; availableWidth: number; availableLeft: number } {
   const viewportCenterX = (viewport.x + viewport.width) / 2
   const blockingThreshold = viewport.width / 7
 
@@ -141,7 +141,7 @@ export function calculateCenterPosition(
   }, viewport.width + viewport.x)
 
   const centerX = (x + availableWidth) / 2 - widthToPlace / 2 - viewport.x
-  return { centerX, availableWidth: availableWidth - x }
+  return { centerX, availableWidth: availableWidth - x, availableLeft: x }
 }
 
 export function getMidpoint(touches: PossibleDragEventPosition): Coord {

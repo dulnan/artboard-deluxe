@@ -369,6 +369,50 @@ export type ArtboardScrollIntoViewOptions = AnimationOptions & {
 
   /** Which axis to scroll. */
   axis?: 'x' | 'y' | 'both'
+
+  /**
+   * Vertical alignment of the target rect within the effective viewport area.
+   *
+   * - `start`: Align the top edge of the target with the top of the viewport.
+   * - `center`: Center the target vertically (default).
+   * - `end`: Align the bottom edge of the target with the bottom of the viewport.
+   * - `nearest`: Scroll the minimum distance needed. No-op if already visible.
+   *   If larger than the viewport, aligns `start`.
+   * - `auto`: Center if the target fits within the viewport, otherwise align
+   *   `start`.
+   */
+  block?: 'start' | 'center' | 'end' | 'nearest' | 'auto'
+
+  /**
+   * Horizontal alignment of the target rect within the effective viewport area.
+   *
+   * - `start`: Align the left edge of the target with the left of the viewport.
+   * - `center`: Center the target horizontally (default).
+   * - `end`: Align the right edge of the target with the right of the viewport.
+   * - `nearest`: Scroll the minimum distance needed. No-op if already visible.
+   *   If larger than the viewport, aligns `start`.
+   * - `auto`: Center if the target fits within the viewport, otherwise align
+   *   `start`.
+   */
+  inline?: 'start' | 'center' | 'end' | 'nearest' | 'auto'
+
+  /**
+   * Padding insets from the viewport edges defining the effective area
+   * for both positioning and scaling.
+   *
+   * Accepts a uniform number or per-edge values using the `Edge` type.
+   */
+  padding?: number | Partial<Edge>
+
+  /**
+   * Defines the effective horizontal area used for positioning.
+   *
+   * - `viewport`: Use the full root element (minus padding). Default.
+   * - `blocking`: Use the non-blocked area computed from blocking rects.
+   *   This positions the target within the available space without affecting
+   *   scaling. Implied automatically when `scale` is `'blocking'`.
+   */
+  area?: 'viewport' | 'blocking'
 }
 
 /**
